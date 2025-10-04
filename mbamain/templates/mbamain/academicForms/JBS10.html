@@ -1,0 +1,610 @@
+<!-- @format -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JBS5 Form</title>
+
+    <link rel="stylesheet" href="{% static 'mbamain/styles/styles.css' %}" />
+    <style>
+        .underline {
+            text-decoration: underline;
+        }
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #000;
+            display: inline-block;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+        .checkbox.checked {
+            background-color: #000;
+        }
+        .error {
+            border-color: #ef4444 !important;
+        }
+        .error-message {
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+  </head>
+
+  <body>
+   
+{%if request.user.is_admin or request.user.is_hdc %}
+{%else%}
+<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+  <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-center rtl:justify-center ">
+        <button  type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+               <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+            </svg>
+         </button>
+      {%if request.user.is_student%}
+            <a href="{%url 'mba_main:student_manage_project' id=project.id %}" class="flex ms-2 md:me-24">
+              <span class="ms-3">&LeftArrow; Back</span>
+            </a>
+            {%else%}
+            <a href="{%url 'mba_main:manage_project' id=project.id %}" class="flex ms-2 md:me-24">
+              <span class="ms-3">&LeftArrow; Back</span>
+            </a>
+            {%endif%}
+      </div>
+      <div class="flex items-center">
+          <div class="flex flex-row gap-4 items-center ms-3">
+            <div id="printer" class="cursor-pointer" >
+       <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#1f1f1f"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
+   </div>
+            <div>
+              <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                <span class="sr-only">Open user menu</span>
+                <img class="w-8 h-8 rounded-full" src="{%static 'mbaAdmin/img/bg_bus.jpg'%}" alt="user photo">
+              </button>
+            </div>
+            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
+              <div class="px-4 py-3" role="none">
+                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                   {%if user.user_type == 3 %} Student {%endif%}  
+                   {%if user.user_type == 2 %} Scholar {%endif%}  
+                  </p>
+                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                 {{user.email}}
+                </p>
+              </div>
+              <ul class="py-1" role="none">
+        
+                <li>
+                  <a href="{% url 'mba_main:projects' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Projects</a>
+                </li>
+                
+                <li>
+                  <a href="{% url 'mba_main:profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Profile</a>
+                </li>
+
+                <li>
+                  <a href="{% url 'mba_main:signout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</nav>
+{%endif%}
+    <div class="p-4 mt-16 space-y-4 text-white h-96 bg-cover bg-center" style="background-image: url({% static 'mbamain/img/bg-2.jpg' %})">
+      {% if messages %} {% for message in messages %} {% if message.tags == 'success' %} {% include 'mbaAdmin/components/toast_success.html' with message=message %} {% else %} {% include 'mbaAdmin/components/toast_error.html' with message=message %} {% endif %} {% endfor %} {% endif %}
+    </div>
+      <div class="-mt-80 mx-4 bg-white p-4 rounded-lg shadow-lg">
+
+    
+      <!-- Header -->
+        <div class="  max-w-4xl mx-auto bg-white p-6 ">
+
+           <div class="flex justify-between">
+             <div class="text-sm">Form JBS10</div>
+            <div class="text-sm">Feb 2022</div>
+           </div>
+            <div class="flex justify-center my-2">
+                <div class=" bg-gray-200 flex items-center justify-center ">
+                     <img src="{%static 'mbamain/img/jbs_uj_logo.png' %}" class="h-16" alt="JBS Logo" />
+                </div>
+            </div>
+            <div class="font-bold text-lg">JOHANNESBURG BUSINESS SCHOOL</div>
+            <div class="font-bold text-lg mt-2">REGISTRATION AND/OR AMENDMENT OF TITLE / SUPERVISOR(S) / ASSESSOR(S)</div>
+        </div>
+
+        <form id="registrationForm" action="{%url 'mba_main:sign_jbs10' project_id=project.id%}" method="post" class="space-y-6">
+            {%csrf_token%}
+
+            <!-- Section A -->
+            <div class="border border-black p-4 mb-6 rounded">
+                <div class="font-bold mb-4">SECTION A: Student information</div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div class="md:col-span-2">
+                        <label for="surname" class="block">Surname:</label>
+                        <input type="text" 
+                         value="{{project.student.student_profile.surname}}"
+                        id="surname" name="surname" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1" required>
+                        <div id="surname-error" class="error-message"></div>
+                    </div>
+                    <div>
+                        <label for="title" class="block">Title:</label>
+                        <input type="text" id="title"
+                         value="{{project.student.student_profile.title}}"
+                        name="title" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                    </div>
+                    <div>
+                        <label for="student_number" class="block">Student number:</label>
+                        <input type="text" id="student_number" 
+                        value="{{project.student.student_profile.student_no}}"
+                        name="student_number" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1" required>
+                        <div id="student_number-error" class="error-message"></div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div class="md:col-span-2">
+                        <label for="initials" class="block">Initials(s):</label>
+                        <input type="text" 
+                         value="{{project.student.student_profile.get_initials}}"
+                        id="initials" name="initials" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1" required>
+                        <div id="initials-error" class="error-message"></div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block">Is this student a UJ staff member?</label>
+                        <div class="flex items-center mt-2">
+                            <div class="flex items-center mr-4">
+                                
+                                <input type="radio" name="is_uj_staff" value="1">
+                                <span class="ml-2">YES</span>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" name="is_uj_staff" value="0" checked >
+                                <span class="ml-2">NO</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="qualification" class="block">Qualification (e.g. MBA):</label>
+                    <input type="text" 
+                     value="{{project.student.student_profile.degree}}"
+                    id="qualification" name="qualification" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1" required>
+                    <div id="qualification-error" class="error-message"></div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="ethical_clearance" class="block">Ethical clearance number:</label>
+                    <input type="text" id="ethical_clearance" name="ethical_clearance_number"
+                    value="{{project.jbs10_form.ethical_clearance_number}}"
+                    class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block">Capstone project</label>
+                    <div class="flex flex-wrap gap-4 mt-2">
+                        <div class="flex items-center">
+                            
+                            <input type="radio" name="capstone" value="limited" checked >
+                            <span class="ml-2">Limited scope dissertation</span>
+                        </div>
+                        <div class="flex items-center">
+                            
+                            <input type="radio" name="capstone" value="minor" >
+                            <span class="ml-2">Minor dissertation</span>
+                        </div>
+                        <div class="flex items-center">
+                        
+                            <input type="radio" name="capstone" value="dissertation" >
+                            <span class="ml-2">Dissertation</span>
+                        </div>
+                        <div class="flex items-center">
+                          
+                            <input type="radio" name="capstone" value="thesis" >
+                            <span class="ml-2">Thesis</span>
+                        </div>
+                        <div class="flex items-center">
+                           
+                            <input type="radio" name="capstone" value="monograph" >
+                            <span class="ml-2">Monograph</span>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="radio" name="capstone" value="article" >
+                            <span class="ml-2">By article</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section B -->
+            <div class="border border-black p-4 mb-6 rounded">
+                <div class="font-bold mb-4">SECTION B: Registration/Amendment of title</div>
+                <div class="text-sm mb-4">The <span class="underline">title</span> should already have been approved <strong>prior</strong> to the appointment of the assessors.</div>
+                
+                <div class="mb-6">
+                    <div class="font-bold mb-2">B1: Registration of title (case sensitive)</div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="md:col-span-3">
+                            <label for="proposed_title" class="block">Proposed title/Approved title (Max 15 words)</label>
+                            <textarea id="proposed_title" name="proposed_title" rows="2" 
+                            class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1" required>{{project.jbs10_form.proposed_title}}</textarea>
+                            <div id="proposed_title-error" class="error-message"></div>
+                        </div>
+                        <div>
+                            <label class="block">Is this a <strong>4IR</strong> research?</label>
+                            <div class="flex gap-4 mt-2">
+                                <div class="flex items-center">
+                                   
+                                    <input type="radio" name="is_4ir_research" value="1" 
+                                    {% if project.jbs10_form.is_4ir_research %}checked{% endif %} class="">
+                                    <span class="ml-2">YES</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" name="is_4ir_research" value="0" 
+                                    {% if not project.jbs10_form.is_4ir_research %}checked{% endif %}
+                                    class="">
+                                    <span class="ml-2">NO</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="font-bold mb-2">B2: Amendment of title (case sensitive)</div>
+                    <div class="text-sm italic mb-2">(Also complete section B1 providing the previously approved title)</div>
+                    <label for="previous_title" class="block">Previous title:</label>
+                    <textarea 
+                     
+                    id="previous_title" name="previous_title" rows="2" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">{{project.jbs10_form.previous_title}}</textarea>
+                </div>
+            </div>
+
+            <!-- Section C -->
+            <div class="border border-black p-4 mb-6 rounded">
+                <div class="font-bold mb-4">SECTION C: Registration/Amendment of supervisor/s</div>
+                
+                <div class="mb-6">
+                    <div class="font-bold mb-2">C1: Registration of (proposed) supervisor/s</div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <div class="md:col-span-3">
+                            <label for="supervisor_name" class="block"><strong>Supervisor:</strong> Title, initials, surname, affiliation</label>
+                            <input value="{{project.jbs10_form.supervisor_name}}" type="text" id="supervisor_name" name="supervisor_name" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1" >
+                            <div id="supervisor_name-error" class="error-message"></div>
+                        </div>
+                        <div>
+                            <label for="supervisor_staff_number" class="block">Staff number:</label>
+                            <input type="text" id="supervisor_staff_number" name="supervisor_staff_number" value="{{project.jbs10_form.supervisor_staff_number}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1" >
+                            <div id="supervisor_staff_number-error" class="error-message"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <div class="md:col-span-3">
+                            <label for="cosupervisor1_name" class="block"><strong>Co-supervisor I:</strong> Title, initials, surname, affiliation</label>
+                            <input type="text" value="{{project.jbs10_form.cosupervisor1_name}}" id="cosupervisor1_name" name="cosupervisor1_name" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                        </div>
+                        <div>
+                            <label for="cosupervisor1_staff_number" class="block">Staff number:</label>
+                            <input type="text" id="cosupervisor1_staff_number" name="cosupervisor1_staff_number" value="{{project.jbs10_form.cosupervisor1_staff_number}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <div class="md:col-span-3">
+                            <label for="cosupervisor2_name" class="block"><strong>Co-supervisor II:</strong> Title, initials, surname, affiliation</label>
+                            <input type="text" id="cosupervisor2_name" value="{{project.jbs10_form.cosupervisor2_name}}" name="cosupervisor2_name" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                        </div>
+                        <div>
+                            <label for="cosupervisor2_staff_number" class="block">Staff number:</label>
+                            <input type="text" id="cosupervisor2_staff_number" name="cosupervisor2_staff_number" value="{{project.jbs10_form.cosupervisor2_staff_number}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="font-bold mb-2">C2: Amendment of supervisor/s</div>
+                    <div class="text-sm italic mb-2">(Also complete section C1 by indicating who the approved supervisor(s) previously were)</div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <div class="md:col-span-3">
+                            <label for="previous_supervisor" class="block"><strong>Amended supervisor:</strong> Title, initials, surname, affiliation</label>
+                            <input type="text" id="previous_supervisor" name="previous_supervisor_name" value="{{project.jbs10_form.previous_supervisor_name}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                        </div>
+                        <div>
+                            <label for="previous_supervisor_staff_number" class="block">Staff number:</label>
+                            <input type="text" id="previous_supervisor_staff_number" name="previous_supervisor_staff_number" value="{{project.jbs10_form.previous_supervisor_staff_number}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <div class="md:col-span-3">
+                            <label for="previous_cosupervisor" class="block"><strong>Amended co-supervisor:</strong> Title, initials, surname, affiliation</label>
+                            <input type="text" id="previous_cosupervisor" name="previous_cosupervisor_name" value="{{project.jbs10_form.previous_cosupervisor_name}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                        </div>
+                        <div>
+                            <label for="previous_cosupervisor_staff_number" class="block">Staff number:</label>
+                            <input type="text" id="previous_cosupervisor_staff_number" name="previous_cosupervisor_stuff_number"  value="{{project.jbs10_form.previous_cosupervisor_stuff_number}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section D -->
+            <div class="border border-black p-4 mb-6 rounded">
+                <div class="font-bold mb-4">SECTION D: Nomination/Amendment of assessors</div>
+                
+                <div class="mb-6">
+                    <div class="font-bold mb-2">D1: Nomination of internal assessor:</div>
+                    <div class="text-sm mb-2">An internal assessor from within CBE may be appointed in the case of assessing a technical research project / limited scope dissertation / minor dissertation as long as that person has had no prior involvement with the research project.</div>
+                    <div>
+                        <label for="internal_assessor" class="block">Title, initials, surname:</label>
+                        <input type="text" id="internal_assessor"
+                         value="{{project.jbs10_form.internal_assessor}}"
+                        name="internal_assessor" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="font-bold mb-2">D2: Nomination of external assessors:</div>
+                    <div class="text-sm mb-4">
+                        <ul class="list-disc pl-5">
+                            <li>For <span class="underline">minor dissertations</span> at master's level, at least two assessors must be appointed, of whom at least one must be external to the University.</li>
+                            <li>For <span class="underline">full research dissertations</span> at master's level, at least two external assessors should be appointed.</li>
+                            <li>For <span class="underline">doctoral theses</span>, at least three assessors should be appointed. All assessors must be external to the University, having not had prior involvement with the project that might compromise there objectivity when assessing the thesis. At least one assessor from outside South Africa should be identified.</li>
+                        </ul>
+                    </div>
+                    <div class="text-sm mb-4">The <strong>curriculum vitae</strong> of each assessor should be attached to this form and forwarded to the CBE Higher Degrees Committee via the Faculty Officer for approval.</div>
+                    
+                    <!-- Assessor 1 -->
+                    <div class="border p-3 mb-4 rounded">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="md:col-span-3">
+                                <label for="external_assessor1_name" class="block">1. Title, initials, surname, affiliation</label>
+                                <input type="text" id="external_assessor1_name" name="external_assessor1_name" value="{{project.jbs10_form.external_assessor1_name}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                            <div>
+                                <label for="external_assessor1_staff_number" class="block">Staff number:</label>
+                                <input type="text" id="external_assessor1_staff_number" name="external_assessor1_staff_number" value="{{project.jbs10_form.external_assessor1_staff_number}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="md:col-span-2">
+                                <label for="external_assessor1_qualification" class="block">Highest academic qualification:</label>
+                                <input type="text" id="external_assessor1_qualification" name="external_assessor1_qualification" value="{{project.jbs10_form.external_assessor1_qualification}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="external_assessor1_email" class="block">E-mail address:</label>
+                                <input type="email" id="external_assessor1_email" name="external_assessor1_email" 
+                                value="{{project.jbs10_form.external_assessor1_email}}"
+                                class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                    <!-- Assessor 2 -->
+                    <div class="border p-3 mb-4 rounded">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="md:col-span-3">
+                                <label for="external_assessor2_name" class="block">2. Title, initials, surname, affiliation</label>
+                                <input type="text" id="external_assessor2_name" name="external_assessor2_name" value="{{project.jbs10_form.external_assessor2_name}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                            <div>
+                                <label for="external_assessor2_staff_number" class="block">Staff number:</label>
+                                <input type="text" id="external_assessor2_staff_number" name="external_assessor2_staff_number" value="{{project.jbs10_form.external_assessor2_staff_number}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="md:col-span-2">
+                                <label for="external_assessor2_qualification" class="block">Highest academic qualification:</label>
+                                <input type="text" id="external_assessor2_qualification" name="external_assessor2_qualification" value="{{project.jbs10_form.external_assessor2_qualification}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="external_assessor2_email" class="block">E-mail address:</label>
+                                <input type="email" id="external_assessor2_email" name="external_assessor2_email" 
+                                value="{{project.jbs10_form.external_assessor2_email}}"
+                                class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                    <!-- Assessor 3 -->
+                    <div class="border p-3 mb-4 rounded">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="md:col-span-3">
+                                <label for="external_assessor3_name" class="block">3. Title, initials, surname, affiliation</label>
+                                <input type="text" id="external_assessor3_name" name="external_assessor3_name" value="{{project.jbs10_form.external_assessor3_name}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                            <div>
+                                <label for="external_assessor3_staff_number" class="block">Staff number:</label>
+                                <input type="text" id="external_assessor3_staff_number" name="external_assessor3_staff_number" value="{{project.jbs10_form.external_assessor3_staff_number}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="md:col-span-2">
+                                <label for="external_assessor3_qualification" class="block">Highest academic qualification:</label>
+                                <input type="text" id="external_assessor3_qualification" name="external_assessor3_qualification" value="{{project.jbs10_form.external_assessor3_qualification}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="external_assessor3_email" class="block">E-mail address:</label>
+                                <input type="email" id="external_assessor3_email" name="external_assessor3_email" 
+                                value="{{project.jbs10_form.external_assessor3_email}}"
+                                class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                </div>
+                
+                <div class="mb-6">
+                    <div class="font-bold mb-2">D3: Amendment of internal assessor:</div>
+                    <div class="text-sm italic mb-2">(Also complete <strong>section D1</strong> by indicating who the approved internal assessor was)</div>
+                    <div>
+                        <label for="previous_internal_assessor" class="block">Title, initials, surname:</label>
+                        <input type="text" id="previous_internal_assessor" name="previous_assessor_name" value="{{project.jbs10_form.previous_assessor_name}}" class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+                        <div class="md:col-span-2">
+                            <label for="previous_internal_assessor_qualification" class="block">Highest academic qualification:</label>
+                            <input type="text" id="previous_internal_assessor_qualification" name="previous_assessor_qualification" 
+                            value="{{project.jbs10_form.previous_assessor_qualification}}"
+                            class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="previous_internal_assessor_staff_number" class="block">Staff number:</label>
+                            <input type="text" id="previous_internal_assessor_staff_number" name="previous_assessor_staff_number"  
+                             value="{{project.jbs10_form.previous_assessor_staff_number}}"
+                            class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="font-bold mb-2">D4: Amendment of external assessor(s):</div>
+                    <div class="text-sm italic mb-2">(Also complete <strong>section D2</strong> by indicating who the approved external assessor(s) were)</div>
+                    
+                    <!-- Previous Assessor 1 -->
+                    <div class="border p-3 mb-4 rounded">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="md:col-span-3">
+                                <label for="previous_external_assessor1_name" class="block">1. Title, initials, surname, affiliation</label>
+                                <input type="text" id="previous_external_assessor1_name" name="previous_external_assessor1_name"
+                                value="{{project.jbs10_form.previous_external_assessor1_name}}"
+                                class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                            <div>
+                                <label for="previous_external_assessor1_staff_number" class="block">Staff number:</label>
+                                <input type="text" id="previous_external_assessor1_staff_number" name="previous_external_assessor1_staff_number" 
+                                value="{{project.jbs10_form.previous_external_assessor1_staff_number}}"
+                                class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="md:col-span-2">
+                                <label for="previous_external_assessor1_qualification" class="block">Highest academic qualification:</label>
+                                <input type="text" id="previous_external_assessor1_qualification" name="previous_external_assessor1_qualification" 
+                                value="{{project.jbs10_form.previous_external_assessor1_qualification}}"
+                                class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="previous_external_assessor1_email" class="block">E-mail address:</label>
+                                <input type="email" id="previous_external_assessor1_email" name="previous_external_assessor1_email" 
+                                value="{{project.jbs10_form.previous_external_assessor1_email}}"
+                                class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <!-- Previous Assessor 1 -->
+                    <div class="border p-3 mb-4 rounded">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="md:col-span-3">
+                                <label for="previous_external_assessor2_name" class="block">2. Title, initials, surname, affiliation</label>
+                                <input type="text" id="previous_external_assessor2_name" name="previous_external_assessor2_name"
+                                value="{{project.jbs10_form.previous_external_assessor2_name}}"
+                                class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                            <div>
+                                <label for="previous_external_assessor2_staff_number" class="block">Staff number:</label>
+                                <input type="text" id="previous_external_assessor2_staff_number" name="previous_external_assessor2_staff_number" 
+                                value="{{project.jbs10_form.previous_external_assessor2_staff_number}}"
+                                class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            <div class="md:col-span-2">
+                                <label for="previous_external_assessor2_qualification" class="block">Highest academic qualification:</label>
+                                <input type="text" id="previous_external_assessor2_qualification" name="previous_external_assessor2_qualification" 
+                                value="{{project.jbs10_form.previous_external_assessor2_qualification}}"
+                                class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="previous_external_assessor2_email" class="block">E-mail address:</label>
+                                <input type="email" id="previous_external_assessor2_email" name="previous_external_assessor2_email" 
+                                value="{{project.jbs10_form.previous_external_assessor2_email}}"
+                                class="w-full border-b border-black focus:outline-none focus:border-blue-500 py-1">
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex flex-col justify-center">
+               
+                
+                      {%if request.user.is_admin%}
+                             {%else%}
+                             <!-- 8. SIGNATORIES -->
+                            <div class="mb-8">
+                                 <div class="tex-center text-red-500 font-bold mb-4 my-4">
+                            By clicking the button below, I confirm  that JBS will use this as my digital signature 
+                          </div>
+                              
+                            </div>
+                            {%if project.should_show_itent_btn%}
+                            <button class="bg-blue-500 w-full text-white block font-bold py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" >
+                                  Submit form
+                            </button>
+
+            {%endif%}
+                             {%endif%}
+
+                              <div class="space-y-4">
+                {%if project.jbs10_form.student_signed%}
+                   <h1>
+                    Student signed
+                   </h1>
+              {%endif%}
+
+              {%if project.jbs10_form.supervisor_signed%}
+                   <h1>
+                     Supervisor signed
+                   </h1>
+              {%endif%}
+              </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="{%static 'mbamain/js/flowbite.min.js'%}"></script>
+     
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const printer = document.getElementById("printer");
+        printer.addEventListener("click", function () {
+          const elementsToHide = document.querySelectorAll("nav, button");
+          elementsToHide.forEach((element) => {
+            element.style.display = "none";
+          });
+          print();
+          // after printing, show the elements again
+          elementsToHide.forEach((element) => {
+            element.style.display = "";
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

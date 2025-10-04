@@ -1,0 +1,323 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HDC</title>
+    
+    <link rel="stylesheet" href="{% static 'mbaAdmin/styles/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .dropdown-content {
+            display: none;
+            animation: fadeIn 0.2s ease-out;
+        }
+        .dropdown-content.show {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen py-8 px-4">
+    <nav class="fixed top-0 z-50  w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+  <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-center rtl:justify-center ">
+        <button  type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+               <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+            </svg>
+         </button>
+
+          <a  href="{%url 'mba_admin:hdc_titles_submission'%}" class=" {% if request.resolver_match.app_name == 'mba_admin' and request.resolver_match.url_name == 'hdc_titles_submission' %} text-orange-400 {% endif %} text-gray-900 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+            Titles
+          </a>
+                    <a href="{%url 'mba_admin:hdc_intent_submission'%}" class=" {% if request.resolver_match.app_name == 'mba_admin' and request.resolver_match.url_name == 'hdc_intent_submission' %} text-orange-400 {% endif %} text-gray-900 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+            Intents Submissions
+          </a>
+
+          <a  href="{%url 'mba_admin:hdc_nominations'%}" class=" {% if request.resolver_match.app_name == 'mba_admin' and request.resolver_match.url_name == 'hdc_nominations' %} text-orange-400 {% endif %} text-gray-900 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+            Assessor Nominations
+          </a>
+
+          
+
+         
+      </div>
+      <div class="flex items-center">
+          <div class="flex flex-row gap-4 items-center ms-3">
+           
+            <div>
+              <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                <span class="sr-only">Open user menu</span>
+                <img class="w-8 h-8 rounded-full" src="{%static 'mbaAdmin/img/bg_bus.jpg'%}" alt="user photo">
+              </button>
+            </div>
+            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
+              <div class="px-4 py-3" role="none">
+                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                   {%if user.user_type == 3 %} Student {%endif%}  
+                   {%if user.user_type == 2 %} Scholar {%endif%}  
+                  </p>
+                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                 {{user.email}}
+                </p>
+              </div>
+              <ul class="py-1 " role="none">
+                <li>
+                  <a href="{% url 'mba_main:signout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                </li>
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</nav>
+ <div class="p-4 space-y-4 text-white h-96 bg-cover bg-center" style="background-image: url({% static 'mbamain/img/bg-2.jpg'%});">
+    
+  </div>
+  
+    <div class=" mx-auto -mt-80 bg-white rounded-md mx-2">
+        <form action="{%url 'mba_admin:hdc_nominations'%}" class="mb-4" method="get">
+      <div class="relative bg-white ">
+    <div class="flex flex-col items-center gap-4 p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
+      <div class="w-full ">
+        <div class="flex items-center">
+          <label for="earch" class="sr-only">Search</label>
+          <div class="relative w-full space-y-2">
+            <input
+              type="number"
+              name="student_no"
+              value="{{student_no}}"
+              id="search"
+              class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="Enter student number"
+              
+            />
+          </div>
+          <input type="hidden" name="page" value="0">
+          <input type="hidden" name="search" value="1">
+        </div>
+      </div>
+      <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
+        <div class="flex items-center w-full space-x-3 md:w-auto">
+          <button class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700" type="submit">
+            Search
+          </button>
+    </div>
+     
+        </div>
+      </div>
+    </div>
+
+    </form>
+    
+     {% if messages %} 
+   {% for message in messages %} 
+        {% if message.tags == 'success' %}
+                {% include 'mbaAdmin/components/toast_success.html' with message=message %} 
+       {% else %} 
+        {% include 'mbaAdmin/components/toast_error.html' with message=message %} 
+      {% endif %} 
+   {% endfor %} 
+ {% endif %}    
+        <div class="bg-red rounded-xl shadow   p-4 ">
+            <div class="overflow-x-auto min-h-80">
+                <table class="w-full">
+                    <thead class="bg-black">
+                        <tr>
+                            <th class="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Student Details</th>
+                            <th class="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Supervisor</th>
+                            <th class="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Project</th>
+                            <th class="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Nomination 1</th>
+                            <th class="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Nomination 2</th>
+                            <th class="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Nomination 3</th>
+                           
+                            
+                            <th class="py-3 px-4 text-left text-xs font-medium text-white uppercase tracking-wider">Options</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                       {%for project in projects%}
+                        <tr class="odd:bg-green even:bg-gray-50">
+                            <td class="py-3 px-4">
+                                <div class="flex items-center">
+                                    <div class="ml-4">
+                                        <div class="font-medium text-gray-900">{{project.student.student_profile.title}} {{project.student.student_profile.name}} {{project.student.student_profile.surname}}</div>
+                                        <div class="text-gray-500 text-sm">{{project.student.email}}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4">
+                                 <div class="flex items-center">
+                                    <div class="ml-4">
+                                        <div class="font-medium text-gray-900">{{project.get_supervisor.supervisor_profile.title}} {{project.get_supervisor.supervisor_profile.name}} {{project.get_supervisor.supervisor_profile.surname}}</div>
+                                        <div class="text-gray-500 text-sm">{{project.get_supervisor.email}}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4">
+                                <a 
+                                  data-modal-target="project-details-{{project.id}}" data-modal-toggle="project-details-{{project.id}}"
+                                 type="button"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-eye mr-2"></i> View Details</a>
+                                {% include 'mbaAdmin/modals/viewProjectDetails.html' with modal_id=project.id project=project  %} 
+                            </td>
+                            <td class="py-3 px-4 relative">
+                                  <button class="dropdown-btn flex items-center text-sm font-medium focus:outline-none">
+                                     <div class="flex items-center  {%if not project.get_assessor_1.approved_before %} border-2 border-indigo-600 rounded-md{%endif%} p-2">
+                                    <div class="">
+                                        <div class="font-medium text-gray-900">{{project.get_assessor_1.title}} {{project.get_assessor_1.name}} {{project.get_assessor_1.surname}}</div>
+                                        <div class="text-gray-500 text-sm">{{project.get_assessor_1.email}}</div>
+                                        
+                                    </div>
+                                </div> <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                                </button>
+                                <div class="dropdown-content absolute left-0 mt-1 min-w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 z-10">
+                                    <div class="py-1">
+                                        <a href="{% url 'mba_admin:approve_assessor' %}?project={{project.id}}&assessor=1" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Approve</a>
+                                        <a href="{% url 'mba_admin:decline_assessor' %}?project={{project.id}}&assessor=1" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Decline</a>
+                                         {%if project.get_assessor_1.user.has_cv%}
+                                          <a  href="{% url 'mba_admin:download_cv' %}?id={{project.get_assessor_1.user.cv.id}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CV</a>
+                                            {%else%}
+                                           <h4 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CV not available</h4>
+                                          {%endif%}
+                                        
+                                    </div>
+                                   
+                                </div>
+                            </td>
+                            
+                            <td class="py-3 px-4 relative">
+                                  <button class="dropdown-btn flex items-center text-sm font-medium focus:outline-none">
+                                     <div class="flex items-center  {%if not project.get_assessor_2.approved_before %} border-2 border-indigo-600 rounded-md{%endif%} p-2">
+                                    <div class="">
+                                        <div class="font-medium text-gray-900">{{project.get_assessor_2.title}} {{project.get_assessor_2.name}} {{project.get_assessor_2.surname}}</div>
+                                        <div class="text-gray-500 text-sm">{{project.get_assessor_2.email}}</div>
+                                    </div>
+                                </div> <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                                </button>
+                                <div class="dropdown-content absolute left-0 mt-1 min-w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 z-10">
+                                    
+                                    <a href="{% url 'mba_admin:approve_assessor' %}?project={{project.id}}&assessor=2" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Approve</a>
+                                    
+                                    <a href="{% url 'mba_admin:decline_assessor' %}?project={{project.id}}&assessor=2" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Decline</a>
+                                     {%if project.get_assessor_2.user.has_cv%} 
+                                          <a  href="{% url 'mba_admin:download_cv' %}?id={{project.get_assessor_2.user.cv.id}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CV</a>
+                                            {%else%}
+                                           <h4 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CV not available</h4>
+                                          {%endif%}
+
+                                    </div>
+                                </div>
+                            </td>
+                            
+                            <td class="py-3 px-4 relative">
+                                  <button class="dropdown-btn flex items-center text-sm font-medium focus:outline-none">
+                                     <div class="flex items-center  {%if not project.get_assessor_3.approved_before %} border-2 border-indigo-600 rounded-md{%endif%} p-2">
+                                    <div class="">
+                                        <div class="font-medium text-gray-900">{{project.get_assessor_3.title}} {{project.get_assessor_3.name}} {{project.get_assessor_3.surname}}</div>
+                                        <div class="text-gray-500 text-sm">{{project.get_assessor_3.email}}</div>
+                                    </div>
+                                </div> <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                                </button>
+                                <div class="dropdown-content absolute left-0 mt-1 min-w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 z-10">
+                                    <div class="py-1">
+                                          <a href="{% url 'mba_admin:approve_assessor' %}?project={{project.id}}&assessor=3" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Approve</a>
+                                          <a href="{% url 'mba_admin:decline_assessor' %}?project={{project.id}}&assessor=3" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Decline</a>
+
+                                          {%if project.get_assessor_3.user.has_cv%} 
+                                          <a  href="{% url 'mba_admin:download_cv' %}?id={{project.get_assessor_3.user.cv.id}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CV</a>
+                                            {%else%}
+                                           <h4 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CV not available</h4>
+                                          {%endif%}
+                                                                            
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 relative">
+                                <button class="dropdown-btn flex items-center text-sm font-medium focus:outline-none">
+                                    More <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                                </button>
+                                <div class="dropdown-content absolute left-0 mt-1 rounded-md min-w-40 shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 z-10">
+                                    <div class="py-1">
+                                        <a
+                                         data-modal-target="attachments-{{project.id}}" data-modal-toggle="attachments-{{project.id}}"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-eye mr-2"></i> Attachments</a>
+                                        
+                                        <a 
+                                        data-modal-target="hdc-action-{{project.id}}" data-modal-toggle="hdc-action-{{project.id}}"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-tag mr-2"></i> Add Comment</a>
+<!-- The admin should provide a comment, mandatory -->
+                                        <a href="{% url 'mba_admin:send_project_to_admin' %}?project_id={{project.id}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"><i class="fas fa-tag mr-2"></i> Send Back To Admin</a>
+                                    </div>
+                                </div>
+                                {% include 'mbaAdmin/modals/nominationAttachement.html' with modal_id=project.id project=project  %} 
+                                {% include 'mbaAdmin/modals/hdcAddComment.html' with modal_id=project.id project=project  %} 
+                            </td>
+                        </tr>
+                        
+                       {%endfor%}
+                        
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+          <div class="my-4 mx-auto">
+           {% include 'mbaAdmin/components/paginationButtons.html' with prev=prev next=next %} 
+        </div>
+    </div>
+  
+
+    <script src="{%static 'mbaAdmin/js/flowbite.min.js'%}"></script>
+    <script>
+        // Dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownButtons = document.querySelectorAll('.dropdown-btn');
+            
+            dropdownButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const dropdown = this.nextElementSibling;
+                    
+                    // Close all other dropdowns
+                    document.querySelectorAll('.dropdown-content').forEach(d => {
+                        if (d !== dropdown) {
+                            d.classList.remove('show');
+                        }
+                    });
+                    
+                    // Toggle current dropdown
+                    dropdown.classList.toggle('show');
+                });
+            });
+            
+            // Close dropdowns when clicking elsewhere
+            document.addEventListener('click', function() {
+                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            });
+            
+            // Prevent dropdowns from closing when clicking inside them
+            document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                dropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

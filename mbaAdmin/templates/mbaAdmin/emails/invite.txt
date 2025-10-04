@@ -1,0 +1,8 @@
+Good day, welcome to our MBA platform!
+
+Your email is {{ email }}
+and your temporary password is {{ password }}
+Log in to the platform to update your profile
+Please remember to change your password after logging in for the first time.
+
+Click here to login: {% url 'mba_main:signin' %}

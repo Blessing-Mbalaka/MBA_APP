@@ -1,0 +1,543 @@
+<!-- @format -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student\Supervisor Form</title>
+  
+  <link rel="stylesheet" href="{% static 'mbamain/styles/styles.css' %}">
+
+  </head>
+
+  <body >
+   
+{%if request.user.is_admin or request.user.is_hdc %}
+{%else%}
+<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+  <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-center rtl:justify-center ">
+        <button  type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+               <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+            </svg>
+         </button>
+     
+         {%if request.user.is_student%}
+            <a href="{%url 'mba_main:student_manage_project' id=project.id %}" class="flex ms-2 md:me-24">
+              <span class="ms-3">&LeftArrow; Back</span>
+            </a>
+            {%else%}
+            <a href="{%url 'mba_main:manage_project' id=project.id %}" class="flex ms-2 md:me-24">
+              <span class="ms-3">&LeftArrow; Back</span>
+            </a>
+            {%endif%}
+      </div>
+      <div class="flex items-center">
+          <div class="flex flex-row gap-4 items-center ms-3">
+            <div id="printer" class="cursor-pointer" >
+       <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#1f1f1f"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
+   </div>
+            <div>
+              <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                <span class="sr-only">Open user menu</span>
+                <img class="w-8 h-8 rounded-full" src="{%static 'mbaAdmin/img/bg_bus.jpg'%}" alt="user photo">
+              </button>
+            </div>
+            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
+              <div class="px-4 py-3" role="none">
+                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                   {%if user.user_type == 3 %} Student {%endif%}  
+                   {%if user.user_type == 2 %} Scholar {%endif%}  
+                  </p>
+                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                 {{user.email}}
+                </p>
+              </div>
+              <ul class="py-1" role="none">
+        
+                <li>
+                  <a href="{% url 'mba_main:projects' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Projects</a>
+                </li>
+                
+                <li>
+                  <a href="{% url 'mba_main:profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Profile</a>
+                </li>
+
+                <li>
+                  <a href="{% url 'mba_main:signout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</nav>
+{%endif%}
+  <div class="p-4 mt-16 space-y-4 text-white h-96 bg-cover bg-center" style="background-image: url({% static 'mbamain/img/bg-2.jpg'%});">
+
+     {% if messages %} 
+   {% for message in messages %} 
+        {% if message.tags == 'success' %}
+                {% include 'mbaAdmin/components/toast_success.html' with message=message %} 
+       {% else %} 
+        {% include 'mbaAdmin/components/toast_error.html' with message=message %} 
+      {% endif %} 
+   {% endfor %} 
+ {% endif %}
+
+    
+  </div>
+   
+        <form action="{%url 'mba_main:sign_sp_form' project_id=project.id%}" class="p-4 -mt-80 shadow-sm mx-4 bg-white rounded-sm" method="post">
+            {%csrf_token%}
+             <div class="page">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8 p-8">
+                <div>
+                     <img src="{%static 'mbamain/img/jbs_uj_logo.png' %}" class="h-16 " alt="JBS Logo" />
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-center text-black mb-8">
+                        JOHANNESBURG BUSINESS SCHOOL
+                    </h1>
+                    <div class="text-white text-center bg-black font-medium  py-2 px-4 rounded-lg mb-2">
+                        <h2 class="text-2xl font-bold">STUDENT-SUPERVISOR AGREEMENT</h2>
+                    </div>
+                </div>
+                <span class="text-gray-300">Sep 2022</span>
+            </div>
+
+            <!-- Note Section -->
+            <div class="mb-8 text-sm">
+                <p class="font-bold mb-2">PLEASE NOTE:</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li>This document lists the rights and obligations of all master's and doctoral postgraduate students enrolled at the University of Johannesburg (UJ), as well as those of their supervisors and co-supervisors.</li>
+                    <li>For the purpose of this document, co-supervisors will also be referred to as supervisors, since their essential responsibilities are the same in respect of their interaction with the student.</li>
+                    <li>The purpose of this document is to provide a clear and concise outline of what each party to the student-supervisor relationship may expect from the other.</li>
+                    <li>This agreement records the expectations that the parties may reasonably have from each other in respect of postgraduate supervision.</li>
+                    <li>The resolution of any disputes that might arise between postgraduate students and their supervisors will be strongly informed by the content of this document.</li>
+                    <li>The main focus of this agreement is the student-supervisor relationship, not the general relationship between the University and the student or supervisor.</li>
+                </ul>
+            </div>
+
+            <!-- Agreement Title -->
+            <div class="text-center mb-8">
+                <h5 class="text-xl font-bold uppercase">Agreement</h5>
+                <p class="font-bold">Between a Master's/Doctoral Student</p>
+            </div>
+
+            <!-- Student Information -->
+            <div class="mb-8">
+                <div class="flex items-center mb-2">
+                    <label class="w-48">Full name(s) and surname of student</label>
+                    <input type="text" value="{{student.student_profile.name}} {{student.student_profile.surname}}" class="flex-1 border-b border-black px-2 py-1" id="studentName">
+                </div>
+                <div class="flex space-x-4 mb-4 items-center ">
+                    <div class="flex-1">
+                        <div class="flex items-center">
+                            <label class="w-24">Student number</label>
+                            <input type="text" value="{{student.student_profile.student_no}}" class="flex-1 border-b border-black px-2 py-1" id="studentNumber">
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center">
+                            <label class="w-16">Degree</label>
+                            <input type="text"value="{{student.student_profile.degree}}" 
+                             name="degree"
+                            class="flex-1 border-b border-black px-2 py-1" id="studentDegree">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AND -->
+            <div class="text-center font-bold mb-4">AND</div>
+
+            <!-- Supervisor Information -->
+            <div class="mb-8">
+                <h6 class="font-bold mb-2">THE SUPERVISOR</h6>
+                <div class="flex items-center mb-2">
+                    <label class="w-48">Full name(s) and surname of supervisor</label>
+                    <input type="text" value="{{project.get_supervisor.supervisor_profile.name}} {{project.get_supervisor.supervisor_profile.surname}}"  class="flex-1 border-b border-black px-2 py-1" id="supervisorName">
+                </div>
+                <div class="flex items-center">
+                    <label class="w-48">School/Department</label>
+                    <input type="text" name="supervisor_department" 
+                   
+                      value="{{project.get_supervisor.supervisor_profile.department}}"
+                    class="flex-1 border-b border-black px-2 py-1" id="supervisorDepartment">
+                </div>
+            </div>
+
+            <!-- AND if applicable -->
+            <div class="text-center font-bold mb-4">AND (if applicable)</div>
+
+            <!-- Co-Supervisor Information -->
+            <div class="mb-8">
+                <h6 class="font-bold mb-2">THE CO-SUPERVISOR</h6>
+                <div class="flex items-center mb-2">
+                    <label class="w-48">Full name(s) and surname of co-supervisor</label>
+                    <input type="text" 
+                     name="co_supervisor_full_names"
+                     value="{{project.sp_form.co_supervisor_full_names}}"
+                    class="flex-1 border-b border-black px-2 py-1" id="coSupervisorName">
+                </div>
+                <div class="flex items-center">
+                    <label class="w-48">School/Department</label>
+                    <input 
+                     name="co_supervisor_department"
+                       value="{{project.sp_form.co_supervisor_department}}"
+                    type="text" class="flex-1 border-b border-black px-2 py-1" id="coSupervisorDepartment">
+                </div>
+            </div>
+
+           
+        </div>
+
+        <!-- Page 2 -->
+        <div class="page mt-8">
+            <!-- 1. PARTIES -->
+            <div class="mb-8">
+                <h6 class="font-bold text-lg mb-4">1. PARTIES</h6>
+                <p class="mb-4">The parties to this Agreement are:</p>
+                
+                <p class="mb-2 font-bold">(A) Student</p>
+                <div class="flex items-center mb-2">
+                    <label class="w-16">Initials</label>
+                    <input  value="{{project.student.student_profile.get_initials}}" 
+                     name="student_initials"
+                    type="text" class="w-20 border-b border-black px-2 py-1" id="studentInitials">
+                    <span class="ml-4">(hereafter called the student)</span>
+                </div>
+                <div class="flex items-center mb-2">
+                    <label class="w-32">Student number</label>
+                    <input type="text" 
+                     value="{{student.student_profile.student_no}}"
+                    class="w-40 border-b border-black px-2 py-1" id="studentNumber2">
+                </div>
+                <div class="flex items-center mb-4">
+                    <label class="w-16">Address</label>
+                    <input 
+                     value="{{student.student_profile.address}}"
+                    type="text" name="student_address" 
+                    class="flex-1 border-b border-black px-2 py-1" id="studentAddress">
+                </div>
+                
+                <p class="mb-2 font-bold">(B) Supervisor</p>
+                <div class="flex items-center mb-2">
+                    <label class=" mr-2">Surname</label>
+                    <input type="text"
+                        value="{{project.get_supervisor.supervisor_profile.surname}}"
+                    class="w-48 border-b border-black px-2 py-1" id="supervisorSurname">
+                    <label class="ml-4 w-16">Initials</label>
+                    <input 
+                      value="{{project.get_supervisor.supervisor_profile.get_initials}}"
+                      name="supervisor_initials"
+                    type="text" class="w-20 border-b border-black px-2 py-1" id="supervisorInitials">
+                </div>
+                <div class="flex items-center mb-4">
+                    <label class=" mr-2">School/Department</label>
+                    <input type="text"
+                    value="{{project.get_supervisor.supervisor_profile.department}}"
+                    class="flex-1 border-b border-black px-2 py-1" id="supervisorDepartment2">
+                    <span class="ml-2">, University of Johannesburg</span>
+                </div>
+                
+                <p class="mb-2 font-bold">AND (if applicable)</p>
+                <p class="mb-2 font-bold">(C) Co-Supervisor</p>
+                <div class="flex items-center mb-2">
+                    <label class=" mr-2">Surname</label>
+                    <input 
+                     name="co_supervisor_surname"
+                     value="{{project.sp_form.co_supervisor_surname}}"
+                    type="text" class="w-48 border-b border-black px-2 py-1" id="coSupervisorSurname">
+                    <label class="ml-4 w-16">Initials</label>
+                    <input 
+                     name="co_supervisor_initials"
+                     value="{{project.sp_form.co_supervisor_initials}}"
+                    type="text" class="w-20 border-b border-black px-2 py-1" id="coSupervisorInitials">
+                </div>
+                <div class="flex items-center">
+                    <label class=" mr-2">School/Department</label>
+                    <input type="text"
+                     value="{{project.sp_form.co_supervisor_department}}"
+                    class="flex-1 border-b border-black px-2 py-1" id="coSupervisorDepartment2">
+                    <span class="ml-2">, University of Johannesburg</span>
+                </div>
+            </div>
+
+            <!-- 2. BACKGROUND -->
+            <div class="mb-8">
+                <h6 class="font-bold text-lg mb-2">2. BACKGROUND</h6>
+                <p>The basis of this agreement is to build a student-supervisor relationship for the duration of the research and study period based on mutual trust.</p>
+            </div>
+
+            <!-- 3. PURPOSE OF UNDERSTANDING -->
+            <div class="mb-8">
+                <h6 class="font-bold text-lg mb-2">3. PURPOSE OF UNDERSTANDING</h6>
+                <p>The main focus of this agreement is the student-supervisor relationship and not the general relationship between the University of Johannesburg and the student or supervisor.</p>
+            </div>
+
+            <!-- 4. BASIS OF UNDERSTANDING -->
+            <div class="mb-8">
+                <h6 class="font-bold text-lg mb-2">4. BASIS OF UNDERSTANDING</h6>
+                <p class="mb-2">4.1 This agreement does not replace any agreements between the University of Johannesburg and the student or employee/supervisor and should be read in conjunction with the general rules governing the enrolment of a student, academic regulations and conditions of employment for employees.</p>
+                <p>4.2 The under-mentioned responsibilities and legitimate expectations of the student and the supervisor/co-supervisor, respectively, are applicable generically across all faculties. However, for practical and historical reasons, some faculties are required to implement additional guidelines for masters' or doctoral research students.</p>
+            </div>
+
+          
+        </div>
+
+        <!-- Page 3 -->
+        <div class="page mt-8">
+            <!-- 5. DEFINITIONS PERTAINING TO THE AGREEMENT -->
+            <div class="mb-8">
+                <h6 class="font-bold text-lg mb-2">5. DEFINITIONS PERTAINING TO THE AGREEMENT</h6>
+                <p class="mb-2"><span class="font-bold">"Supervisor"</span> means the person appointed by the University to give professional and academic guidance to a student registered for a postgraduate research project under his/her name and to ensure the provision of adequate financial, spatial and infrastructural support for the research project prior to enrolment.</p>
+                <p><span class="font-bold">"Co-Supervisor"</span> means a person who is not necessarily on the staff of the University and who, in consultation with the supervisor, is appointed to give assistance and guidance to a student in those areas where the supervisor is not sufficiently familiar with the full scope of the field to be covered in the project, where the project is multidisciplinary or for purposes of mentorship.</p>
+            </div>
+
+            <!-- 6. PRINCIPLES OF STUDENT/SUPERVISOR RELATIONSHIP -->
+            <div class="mb-8">
+                <h6 class="font-bold text-lg mb-2">6. PRINCIPLES OF STUDENT/SUPERVISOR RELATIONSHIP</h6>
+                
+                <!-- 6.1 Responsibilities of the student -->
+                <div class="mb-6">
+                    <p class="font-bold mb-2">6.1 Responsibilities of the student and legitimate expectations by supervisor of the student</p>
+                    <p class="mb-4">The student is responsible diligently and sincerely to exercise the following responsibilities, and where appropriate to consult with his/her supervisor/co-supervisor in order to give effect to these responsibilities; conversely, the supervisor/co-supervisor may legitimately expect the student to exercise these responsibilities at all times:</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-start">
+                            <span class="mr-2">(a)</span>
+                            <span>plan and implement the agreed research programme or project;</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="mr-2">(b)</span>
+                            <span>successfully complete all the academic outputs of the study programme;</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="mr-2">(c)</span>
+                            <span>finding appropriate literature and obtaining information from literature;</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="mr-2">(d)</span>
+                            <span>writing the research proposal in the time stipulated;</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="mr-2">(e)</span>
+                            <span>preparing all documents required for obtaining ethics clearance, if applicable;</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="mr-2">(f)</span>
+                            <span>assisting in a limited manner in the drafting of funding applications;</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="mr-2">(g)</span>
+                            <span>planning work schedules;</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="mr-2">(h)</span>
+                            <span>engaging in any required fieldwork or data gathering, laboratory experimentation, data processing and statistical analyses;</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="mr-2">(i)</span>
+                            <span>writing and proofreading of his/her minor dissertation, dissertation or thesis, including, but not limited to, obtaining professional assistance with the linguistic and technical editing of the minor dissertation, dissertation or thesis;</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="mr-2">(j)</span>
+                            <span>attending to any amendments or revisions of the minor dissertation, dissertation or thesis required by the supervisors, or internal or external assessors, and being responsible for the production of the final bound hard and electronic copies;</span>
+                        </div>
+                    </div>
+                </div>
+
+             
+            </div>
+        </div>
+
+        <!-- Page 4 -->
+        <div class="page mt-8">
+            <!-- Continuation of 6.1 -->
+            <div class="mb-6">
+                <div class="space-y-2">
+                    <div class="flex items-start">
+                        <span class="mr-2">(k)</span>
+                        <span>make regular appointments with the supervisor/co-supervisor and inform him/her/them in time if any administrative or academic difficulties should be experienced in the study programme in order that the supervisor/co-supervisor may advise in respect of timely corrective action;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(l)</span>
+                        <span>participate in research projects and programmes as determined by the supervisor/co-supervisor, including attending symposia, seminars and conferences;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(m)</span>
+                        <span>if necessary, purchase items that may be required to complete the minor dissertation, dissertation or thesis;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(n)</span>
+                        <span>produce at least one manuscript of a research paper in a format that is ready for submission to an accredited research journal by the time the JBS Higher Degrees Assessment Committee/JBS Higher Degrees Committee considers the assessment results;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(o)</span>
+                        <span>adhere at all times to all general academic ethics with regard to academic integrity and plagiarism, and ethics requirements relating to the research work; and</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(p)</span>
+                        <span>renew his/her annual registration with the University of Johannesburg at the stipulated times.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6.2 Responsibilities of the supervisor/co-supervisor -->
+            <div class="mb-8">
+                <p class="font-bold mb-2">6.2 Responsibilities of the supervisor/co-supervisor and legitimate expectations by the student of the supervisor/co-supervisor</p>
+                <p class="mb-4">The supervisor/co-supervisor are responsible diligently and sincerely to exercise the following responsibilities; conversely, the student may legitimately expect the supervisor/co-supervisor to exercise these responsibilities at all times:</p>
+                
+                <div class="space-y-2 mb-4">
+                    <div class="flex items-start">
+                        <span class="mr-2">(a)</span>
+                        <span>clarify the respective roles of the supervisor and co-supervisor(s) (if appointed), and communicate these clearly to the student;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(b)</span>
+                        <span>administering and managing matters associated with the student's studies according to the regulations of the University of Johannesburg;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(c)</span>
+                        <span>cooperating with each other (where more than one supervisor has been assigned) and with the Head of Department and/or Dean of the School and/or other responsible University official, to ensure as far as reasonably possible that the student is provided with the basic infrastructure and necessary resources to undertake the research;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(d)</span>
+                        <span>co-operating with each other (where more than one supervisor has been assigned) and with the Head of Department and/or Dean, to assist with the arrangements for colloquia or seminars which the student may present;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(e)</span>
+                        <span>ensuring that the Program Manager and relevant committees are furnished with all relevant documentation at the relevant time;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(f)</span>
+                        <span>providing academic guidance to the student to ensure the development of research skills, and mastery of the research discipline and the field of specialisation, and that this is demonstrated by the relevant minor dissertation, dissertation or thesis;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(g)</span>
+                        <span>facilitating the student's access to necessary research resources, such as the library, laboratories and equipment, or access to chemicals and consumables, while not diminishing the student's duty to take responsibility for his/her own research, including purchasing items that may be required to complete the production of the minor dissertation, dissertation or thesis;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(h)</span>
+                        <span>introducing the student to the School in order to, where possible and practicable, involve him/her in academic activities appropriate to the field of expertise;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(i)</span>
+                        <span>meeting with the student regularly to provide guidance, monitor progress and agreed-upon timeframes, and recommend corrective measures if necessary;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(j)</span>
+                        <span>keeping a written record of progress and output, and providing timeous feedback, but bearing in mind also his/her other formal UJ responsibilities;</span>
+                    </div>
+                </div>
+            </div>
+
+         
+        </div>
+
+        <!-- Signature Page -->
+        <div class="page mt-8">
+            <!-- Continuation of 6.2 -->
+            <div class="mb-8">
+                <div class="space-y-2">
+                    <div class="flex items-start">
+                        <span class="mr-2">(k)</span>
+                        <span>providing progress reports required by the University of Johannesburg and its research or postgraduate study structures, or by external agencies such as the National Research Foundation;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(l)</span>
+                        <span>assessing the minor dissertation, dissertation or thesis (if appointed as an assessor), and overseeing any changes recommended by the assessors and which have been stipulated by the appropriate Faculty/College or University structure;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(m)</span>
+                        <span>liaising regularly with each other in order to clarify on an ongoing basis roles and responsibilities in regard to academic supervision;</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(n)</span>
+                        <span>adhering at all times to all general academic ethics with regard to academic integrity and plagiarism, and ethics requirements of research work; and</span>
+                    </div>
+                    <div class="flex items-start">
+                        <span class="mr-2">(o)</span>
+                        <span>encouraging the student to seek external financial support for his/her studies.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. DISPUTE RESOLUTION -->
+            <div class="mb-8">
+                <h6 class="font-bold text-lg mb-2">7. DISPUTE RESOLUTION (ACCORDING TO ACADEMIC REGULATIONS)</h6>
+                <p class="mb-2">In the event of a disagreement between a student and any supervisor, both parties are initially expected to resolve the disagreement amicably and on their own. By mutual consent, the parties may request the intervention of a facilitator (usually the programme coordinator or Head of Department (HOD)) to assist in finding a resolution to the disagreement.</p>
+                <p class="mb-2">If all bona fide attempts to resolve a disagreement without the formal involvement of third parties with decision-making authority have failed, the parties are expected to alert the head of the respective academic department jointly or separately to the dispute, who will then be expected to mediate a resolution of the disagreement if possible. Where a resolution cannot be achieved with the involvement of the HOD, he/she decides whether the matter should be referred to the Dean of the School or a relevant higher authority in the University.</p>
+                <p>If either party believes the HOD to be compromised in his/her attempts to mediate a solution, that party retains the right to appeal directly to the Dean, who will decide whether the appeal has merit, and will accordingly decide to either refer the matter back to the HOD, seek a resolution him/herself, or refer the matter to an appropriate committee within the University.</p>
+            </div>
+
+             {%if request.user.is_admin%}
+             {%else%}
+             <!-- 8. SIGNATORIES -->
+            <div class="mb-8">
+                 <div class="tex-center text-red-500 font-bold mb-4 my-4">
+            By clicking the button below, I confirm  that JBS will use this as my digital signature 
+          </div>
+              
+            </div>
+
+     
+             
+            <button class="bg-blue-500 w-full text-white block font-bold py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" >
+               Submit form
+            </button>
+          
+
+             {%endif%}
+               <!-- Show the dates the student and supervisor first signed the form -->
+              <div class="space-y-4">
+                {%if project.sp_form.student_signed%}
+                   <h1>
+                    Student signed
+                   </h1>
+              {%endif%}
+
+              {%if project.sp_form.supervisor_signed%}
+                   <h1>
+                     Supervisor signed
+                   </h1>
+              {%endif%}
+              </div>
+
+
+
+            <!-- Final Footer -->
+            <div class="text-center text-xs mt-8">
+                <p>Adapted from CBE</p>
+            </div>
+        </div>
+    </form>
+      
+        <script src="{%static 'mbamain/js/flowbite.min.js'%}"></script>
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            const printer = document.getElementById("printer")
+            printer.addEventListener('click', function () {
+               const elementsToHide = document.querySelectorAll('nav, button');
+                elementsToHide.forEach(element => {
+                    element.style.display = 'none';
+                });
+               print()
+                // after printing, show the elements again
+                elementsToHide.forEach(element => {
+                    element.style.display = '';
+                });
+            })
+          })
+        </script>
+  </body>

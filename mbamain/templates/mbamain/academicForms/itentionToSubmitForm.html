@@ -1,0 +1,383 @@
+<!-- @format -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Intention Form</title>
+  
+  <link rel="stylesheet" href="{% static 'mbamain/styles/styles.css' %}">
+
+  </head>
+
+  <body >
+    
+{%if request.user.is_admin or request.user.is_hdc %}
+{%else%}
+<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+  <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-center rtl:justify-center ">
+        <button  type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+               <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+            </svg>
+         </button>
+     
+         {%if request.user.is_student%}
+            <a href="{%url 'mba_main:student_manage_project' id=project.id %}" class="flex ms-2 md:me-24">
+              <span class="ms-3">&LeftArrow; Back</span>
+            </a>
+            {%else%}
+            <a href="{%url 'mba_main:manage_project' id=project.id %}" class="flex ms-2 md:me-24">
+              <span class="ms-3">&LeftArrow; Back</span>
+            </a>
+            {%endif%}
+      </div>
+      <div class="flex items-center">
+          <div class="flex flex-row gap-4 items-center ms-3">
+            <div id="printer" class="cursor-pointer" >
+       <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#1f1f1f"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
+   </div>
+            <div>
+              <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                <span class="sr-only">Open user menu</span>
+                <img class="w-8 h-8 rounded-full" src="{%static 'mbaAdmin/img/bg_bus.jpg'%}" alt="user photo">
+              </button>
+            </div>
+            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
+              <div class="px-4 py-3" role="none">
+                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                   {%if user.user_type == 3 %} Student {%endif%}  
+                   {%if user.user_type == 2 %} Scholar {%endif%}  
+                  </p>
+                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                 {{user.email}}
+                </p>
+              </div>
+              <ul class="py-1" role="none">
+        
+                <li>
+                  <a href="{% url 'mba_main:projects' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Projects</a>
+                </li>
+                
+                <li>
+                  <a href="{% url 'mba_main:profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Profile</a>
+                </li>
+
+                <li>
+                  <a href="{% url 'mba_main:signout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</nav>
+{%endif%}
+  <div class="p-4 mt-16 space-y-4 text-white h-96 bg-cover bg-center" style="background-image: url({% static 'mbamain/img/bg-2.jpg'%});">
+
+     {% if messages %} 
+   {% for message in messages %} 
+        {% if message.tags == 'success' %}
+                {% include 'mbaAdmin/components/toast_success.html' with message=message %} 
+       {% else %} 
+        {% include 'mbaAdmin/components/toast_error.html' with message=message %} 
+      {% endif %} 
+   {% endfor %} 
+ {% endif %}
+
+    
+  </div>
+    <div class="-mt-80 px-8  mx-auto">
+      <div id="submissionForm"  class="mb-8 py-8 px-4 shadow-md rounded-md  bg-white">
+      <div class=" mb-4 space-y-8 px-8">
+        <div class="w-30 h-20  mr-4">
+          <img src="{% static 'mbamain/img/jbs_uj_logo.png' %}" alt="Logo" class="block mx-auto h-full" />
+        </div>
+        <h1 class="text-xl font-bold text-center">NOTICE OF INTENTION TO SUBMIT DISSERTATION OR THESIS FOR EXAMINATION</h1>
+      </div>
+
+      <table class="form-table mb-6 ">
+        <tr >
+          <input type="text" id="fullName" value="{{project.student.student_profile.title}} {{project.student.student_profile.name}} {{project.student.student_profile.surname}}" class="w-full" placeholder="Title, initials and surname " required />
+        </tr>
+        <tr>
+          <input type="text" class="w-full" value="{{project.student.student_profile.student_no}}" id="studentNumber" placeholder="Student number" required />
+        </tr>
+        <tr>
+          <input type="email" id="email" value="{{project.student.email}}" class="w-full md:w-1/2" placeholder="Email address" required />
+          <input type="text" id="contactNumber" class="w-full md:w-1/2" value="{{project.student.student_profile.contact}}" placeholder="Contact number" required />
+        </tr>
+        <tr>
+          
+            <select id="qualification" class="w-full" required>
+              <option value="masters">Master's Degree</option>
+
+            </select>
+          
+        </tr>
+        <tr class="my-4">
+            <h1 class="font-medium">
+              Final title of the Capstone Consultancy Project /thesis approved by JBS Higher Degree Committee
+            </h1>
+            <textarea id="thesisTitle" rows="3" class="w-full p-1" placeholder="Final title of your Capstone Consultancy Project/Thesis" required>{{project.project_title}}</textarea>
+          
+        </tr>
+        <tr >
+          <input type="text" id="supervisor" class="mt-2 w-full" value="{{project.get_supervisor.supervisor_profile.title}} {{project.get_supervisor.supervisor_profile.name}} {{project.get_supervisor.supervisor_profile.surname}} " placeholder="Supervisor (Title, initials and surname)" required />
+        </tr>
+          <form id="supervisorSubmit"  action="{%url 'mba_main:sign-notice-form' project_id=project.id%}" method="post">
+            {%csrf_token%}
+        <tr >
+        <input type="text" id="coSupervisor"
+         name="co_supervisor_details"
+         value="{{project.notice_form.co_supervisor_details}}"
+        class="mt-2 w-full" placeholder="Co-supervisor (if applicable)" />
+        </tr>
+        <tr>
+          
+          <h1 class="mt-4">
+             Date on which this notice is given {{project.notice_form.date_signed_student}}
+          </h1>
+        </tr>
+        <tr>
+          <td colspan="7">
+            <div class="my-4">
+              I,
+                <input  type="text" value=" {{project.student.student_profile.name}} {{project.student.student_profile.surname}}" placeholder="student name and surname" class="inline-block w-80 border-0"/>
+              , hereby give notice that I intend to submit my Capstone Consultancy Project /Thesis for examination. I hereby acknowledge that failure to submit the Capstone Consultancy Project /Thesis within the notice period given will result in it being cancelled and a new notice will have to be
+              submitted in this regard.
+            </div>
+            <div class="mb-4">
+              I am aware of all the requirements towards the submission and completion of the degree including submitting my Capstone Consultancy Project /Thesis through
+              <span class="underline">Turnitin</span>
+              and submitting to my supervisor, an
+              <span class="underline">article</span>
+              in the form that could be submitted for publication in the case of masters, and evidence of
+              <span class="underline">two submitted articles to a journal</span>
+              in the case of a PhD.
+            </div>
+           
+          </td>
+        </tr>
+      
+        
+        <tr class=" bg-black text-center text-white">
+          <td colspan="7"><h1 class="my-4 font-bold">To be completed by the supervisor(s) only</h1>
+        </tr>
+        <tr>
+          <td colspan="5">
+            <div class="flex items-center mb-2 mt-4">
+              <input type="radio" id="supervisorAgree" name="supervisorApproval"
+               {%if form.supervisor_agree == True %} checked {%endif%}
+              value="1" class="mr-2" />
+              <label for="supervisorAgree">
+                I, the supervisor
+                <span class="underline">agree</span>
+                to the notice of intention to submit the Capstone Consultancy Project /Thesis for examination purposes.
+              </label>
+            </div>
+          </td>
+          <td colspan="2">
+          
+          </td>
+        </tr>
+        <tr>
+          <td colspan="5">
+            <div class="flex items-center mb-2">
+              <input type="radio" id="coSupervisorAgree" name="coSupervisorApproval" value="1" class="mr-2" />
+              <label for="coSupervisorAgree">
+                I, the co-supervisor,
+                <span class="underline">agree</span>
+                to the notice of intention to submit the Capstone Consultancy Project /Thesis for examination purposes.
+              </label>
+            </div>
+          </td>
+          <td colspan="2">
+           
+          </td>
+        </tr>
+       
+        <tr>
+          <td colspan="5">
+            <div class="flex items-center mb-2">
+              <input type="radio" id="supervisorDisagree" name="supervisorApproval" 
+               {%if form.supervisor_agree == False %} checked {%endif%}
+              value="0" class="mr-2" />
+              <label for="supervisorDisagree">
+                I, the supervisor,
+                <span class="underline">do not agree</span>
+                to the notice of intention to submit for examination purposes.
+              </label>
+            </div>
+          </td>
+          <td colspan="2">
+          
+          </td>
+        </tr>
+        <tr>
+          <td colspan="5">
+            <div class="flex items-center mb-2">
+              <input type="radio" id="coSupervisorDisagree" name="coSupervisorApproval" value="disagree" class="mr-2" />
+              <label for="coSupervisorDisagree">
+                I, the co-supervisor,
+                <span class="underline">do not agree</span>
+                to the notice of intention to submit for examination purposes.
+              </label>
+            </div>
+          </td>
+          <td colspan="2">
+          
+          </td>
+        </tr>
+        <tr>
+          <td colspan="7">
+            <label for="disagreementReasons" class="block mb-1">Please provide reasons why you do not agree to the notice of intention to submit by the student.</label>
+            <textarea id="disagreementReasons" name="comment" class="w-full border border-gray-300 p-1" rows="3">{{form.supervisors_comment}}</textarea>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="7">
+               <h1>
+            Date signed
+         {% if form.primary_supervisor_signature %}
+             {{form.supervisors_signed_date}}
+         {%else%}
+          Not signed
+         {%endif%}
+          </h1>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6">This candidate's title has been approved by JBS HDC</td>
+          <td>
+            <div class="flex justify-around">
+              <div class="radio-option">
+                <input type="radio" id="titleApprovedYes" 
+                 {%if form.title_approved_hdc == True %} checked {%endif%}
+                name="title_approved" value="1" class="mr-1" />
+                <label for="titleApprovedYes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" 
+                 {%if form.title_approved_hdc == False %} checked {%endif%}
+                id="titleApprovedNo" name="title_approved" value="0" class="mr-1" />
+                <label for="titleApprovedNo">No</label>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="7"><input type="text" id="ethicalClearance" name="ethics" value="{{form.ethicals}}" placeholder="Ethical clearance number / exempted" class="w-full my-4"/></td>
+        </tr>
+        <tr>
+          <td colspan="6">Examiners have been nominated and approved by JBS HDC</td>
+          <td>
+            <div class="flex justify-around">
+              <div class="radio-option">
+                <input type="radio" id="examinersNominatedYes" name="examinersNominated" 
+                  {%if form.approved_hdc == True %} checked {%endif%}
+                value="1" class="mr-1" />
+                <label for="examinersNominatedYes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="examinersNominatedNo" name="examinersNominated" value="0" 
+                 {%if form.approved_hdc == False %} checked {%endif%}
+                class="mr-1" />
+                <label for="examinersNominatedNo">No</label>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="6">
+            I have nominated examiners for this candidate to
+            <br />
+            accompany this notice (
+            <strong>
+              only in the event where
+              <br />
+              examiners have not been nominated
+            </strong>
+            )
+          </td>
+          <td>
+            <div class="flex justify-around">
+              <div class="radio-option">
+                <input type="radio" id="examinersNominatedByMeYes" 
+                value2="{{form.nominated_examinners}}"
+                name="examinersNominatedByMe" value="1" class="mr-1" {%if form.nominated_examinners == True %} checked {%endif%}  />
+                <label for="examinersNominatedByMeYes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="examinersNominatedByMeNo" name="examinersNominatedByMe" value="0" class="mr-1" {%if form.nominated_examinners == False %} checked {%endif%}/>
+                <label for="examinersNominatedByMeNo">No</label>
+              </div>
+            </div>
+          </td>
+        </tr>
+        </form>
+      </table>
+
+    
+       {%if request.user.is_admin%}
+             {%else%}
+             <!-- 8. SIGNATORIES -->
+            <div class="mb-8">
+                 <div class="tex-center text-red-500 font-bold mb-4 my-4">
+            By clicking the button below, I confirm  that JBS will use this as my digital signature 
+          </div>
+              
+            </div>
+            {%if project.should_show_itent_btn%}
+            <button 
+            form="supervisorSubmit"
+            class="bg-blue-500 w-full text-white block font-bold py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" >
+                  Sign form
+            </button>
+            {%endif%}
+             {%endif%}
+              <div class="space-y-4">
+                {%if project.notice_form.student_signed%}
+                   <h1>
+                    Student signed
+                   </h1>
+              {%endif%}
+
+              {%if project.notice_form.supervisor_signed%}
+                   <h1>
+                     Supervisor signed
+                   </h1>
+              {%endif%}
+              </div>
+
+      <p class="mt-8 text-sm"><strong>Please note: This notice of intention to submit Capstone Consultancy Project /Thesis must be handed in not later than 3 months for Master's degree candidates and 6 months for Doctoral candidates</strong></p>
+
+     
+    </div>
+    </div>
+        <script src="{%static 'mbamain/js/flowbite.min.js'%}"></script>
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+            const printer = document.getElementById("printer")
+            printer.addEventListener('click', function () {
+               const elementsToHide = document.querySelectorAll('nav, button');
+                elementsToHide.forEach(element => {
+                    element.style.display = 'none';
+                });
+               print()
+               
+                // after printing, show the elements again
+                elementsToHide.forEach(element => {
+                    element.style.display = '';
+                });
+            })
+          })
+        </script>
+  </body>

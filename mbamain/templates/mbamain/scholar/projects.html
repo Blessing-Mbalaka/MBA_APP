@@ -1,0 +1,90 @@
+<!-- @format -->
+
+{%extends 'mbamain/scholar/base_scholar.html'%} {% load static %} {%block title %} Projects {% endblock title %} {% block content%}
+<div class="space-y-8">
+  <!-- table -->
+      {% if messages %} 
+   {% for message in messages %} 
+        {% if message.tags == 'success' %}
+                {% include 'mbaAdmin/components/toast_success.html' with message=message %} 
+       {% else %} 
+        {% include 'mbaAdmin/components/toast_error.html' with message=message %} 
+      {% endif %} 
+   {% endfor %} 
+ {% endif %}
+
+  <div class="relative overflow-x-auto  shadow-md sm:rounded-lg p-4">
+    <form action="{%url 'mba_main:projects_scholar'%}" method="get" class="pb-4 bg-white dark:bg-gray-900 gap-4 flex">
+      <label for="table-search" class="sr-only">Search</label>
+      <div class="relative mt-1">
+        <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+          </svg>
+        </div>
+        <input
+          type="text"
+          value="{{search}}"
+          name="search"
+          id="table-search"
+          class="block pt-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Search for project"
+        />
+      </div>
+       <button
+        class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-lg md:w-auto bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-orange-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none"
+      >
+         Search
+      </button>
+    </form>
+      {%if projects%}
+      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+          <th scope="col" class="px-6 py-3">Project Title</th>
+          <th scope="col" class="px-6 py-3">Student</th>
+          <th scope="col" class="px-6 py-3">Date</th>
+          <th scope="col" class="px-6 py-3">Status</th>
+          <th scope="col" class="px-6 py-3">Comment</th>
+          <th scope="col" class="px-6 py-3 text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+       {% for project in projects%}
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{project.project_title}}</th>
+          <td class="px-6 py-4">{{project.student.student_profile.title}} {{project.student.student_profile.name}} {{project.student.student_profile.surname}}</td>
+          <td class="px-6 py-4">{{project.created_date|date:"d M Y H:i"}}</td>
+          <td class="px-6 py-4">{{project.format_project_status}}</td>
+           <td class="px-6 py-4">
+              {%include 'mbamain/modals/projectComments.html' with modal_id=project.id project=project %} 
+            <button  data-modal-target="project-comments-{{project.id}}" data-modal-toggle="project-comments-{{project.id}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">comments</button>
+            
+          </td>
+          <td class="px-6 py-4 flex g-4 justify-between flex-wrap">
+            <a href="{%url 'mba_main:manage_project' id=project.id %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Forms</a>
+              {%if not project.nomination_form_submitted%}
+              <a href="{%url 'mba_main:appoint_assessor' assessor_id=1  %}?project_id={{project.id}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Nominate </a>
+            
+              {%else%}
+              
+             {%endif%}
+          </td>
+        </tr>
+       {%endfor%}
+       
+       
+      </tbody>
+    </table>
+        {%else%}
+        <div class="flex items-center justify-center h-64 bg-orange-500 rounded-lg">
+          <p class="text-center text-white dark:text-gray-400">You are currently not supervising any project</p>
+        </div>
+      {%endif%}
+  </div>
+
+   {%if projects%}
+      {%include 'mbaMain/components/paginationButtons.html' with next=next prev=prev%}
+   {%endif%}
+</div>
+ {%endblock %}

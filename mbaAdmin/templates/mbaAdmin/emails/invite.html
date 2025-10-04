@@ -1,0 +1,66 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        padding: 20px;
+        line-height: 1.6;
+      }
+
+      a {
+        color: #1a73e8;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .container {
+        background: #ffffff;
+        border: 1px solid #ddd;
+        padding: 20px;
+        max-width: 600px;
+        margin: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      Good day,
+      <br />
+      Welcome to our johannesburg Business School MBA platform!
+      <br />
+      <br />
+      Your email is
+      <strong>{{ user.email }}</strong>
+      <br />
+      and your temporary password is
+      <strong>{{ password }}</strong>
+      .
+      <br />
+      Log in to the platform to update your profile
+
+      <br />
+        Please remember to change your password after logging in for the first time.
+      <br />
+      kind regards,
+      <br>
+JBS (johannesburg Business School)
+<div style="height: 100px; margin-top: 20px; display: flex; align-items: center; justify-content: center;">
+     <img src="https://jbs.ac.za/wp-content/webp-express/webp-images/uploads/2025/03/JBSUJ20-400x363.png.webp" style="height: 100%;" alt="JBS Logo" />
+</div>
+    </div>
+  </body>
+</html>

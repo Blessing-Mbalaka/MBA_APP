@@ -1,0 +1,6 @@
+2025-08-05 10:10:12,117 - INFO - Error while onboarding students: Unable to read workbook: could not read manifest from student_list.xlsx.
+This is most probably because the workbook source files contain some invalid XML.
+Please see the exception for more details.
+2025-08-05 10:12:54,612 - INFO - C:\Users\vee\OneDrive\Desktop\workspace\mba-project\mba-project\mbaAdmin\views\students_views.py changed, reloading.
+2025-08-05 10:12:59,014 - INFO - C:\Users\vee\OneDrive\Desktop\workspace\mba-project\mba-project\mbaAdmin\views\students_views.py changed, reloading.
+2025-08-05 10:16:35,172 - INFO - C:\Users\vee\OneDrive\Desktop\workspace\mba-project\mba-project\mbaAdmin\utils\shortcuts.py changed, reloading.

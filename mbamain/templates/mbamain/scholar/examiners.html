@@ -1,0 +1,252 @@
+<!-- @format -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appoint Supervisor</title>
+
+  <link rel="stylesheet" href="{% static 'mbamain/styles/styles.css' %}">
+  <script src="{%static 'mbamain/js/main.js'%}"></script>
+  </head>
+
+  <body >
+    
+<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+  <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-center rtl:justify-center ">
+        <button data-drawer-target="logo-sidebar" data-drawer-toggle="logo-sidebar" aria-controls="logo-sidebar" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+               <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+            </svg>
+         </button>
+        <a href="" class="flex ms-2 md:me-24">
+          <img src="{%static 'mbamain/img/jbs_uj_logo.png' %}" class="h-8 " alt="JBS Logo" />
+        </a>
+      </div>
+      <div class="flex items-center">
+          <div class="flex items-center ms-3">
+            <div>
+              <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                <span class="sr-only">Open user menu</span>
+                <img class="w-8 h-8 rounded-full" src="{%static 'mbamain/img/bg_bus.jpg'%}" alt="user photo">
+              </button>
+            </div>
+            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
+              <div class="px-4 py-3" role="none">
+                {%if user.user_type == 3 %} Student {%endif%}  
+                {%if user.user_type == 2 %} Scholar {%endif%}  
+                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                  {{ user.username }}
+                </p>
+              </div>
+              <ul class="py-1" role="none">
+                <li>
+                  <a href="{% url 'mba_main:index_scholar' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Invites</a>
+                </li>
+                <li>
+                  <a href="{% url 'mba_main:projects_scholar' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Manage Projects</a>
+                </li>
+                <li>
+                  <a href="{% url 'mba_main:profile_scholar' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Profile</a>
+                </li>
+
+                <li>
+                  <a href="{% url 'mba_main:signout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                </li>
+              </ul>
+              
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</nav>
+
+
+<aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
+   <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+      <ul class="space-y-2 font-medium">
+         <li class="">
+            <a href="{% url 'mba_main:projects_scholar' %}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+              
+               <span class="ms-3">&LeftArrow; Back</span>
+            </a>
+         </li>
+         <li class="{% if request.path == '/appoint/assessor/1' %}bg-gray-300 dark:bg-gray-700{% endif %}">
+            <a href="{% url 'mba_main:appoint_assessor' assessor_id=1 %}?project_id={{project_id}}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+               <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-orange-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
+                  <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
+                  <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
+               </svg>
+               <span class="ms-3">Assessor 1</span>
+            </a>
+         </li>
+         <li class="{% if request.path == '/appoint/assessor/2' %} bg-gray-300 dark:bg-gray-700{% endif %}">
+            <a href="{% url 'mba_main:appoint_assessor' assessor_id=2 %}?project_id={{project_id}}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+               <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-orange-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
+                  <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
+                  <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
+               </svg>
+               <span class="ms-3">Assessor 2</span>
+            </a>
+         </li>
+         <li class="{% if request.path == '/appoint/assessor/3' %}bg-gray-300 dark:bg-gray-700{% endif %}">
+            <a href="{% url 'mba_main:appoint_assessor' assessor_id=3 %}?project_id={{project_id}}" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+               <svg class="w-5 h-5 text-gray-500 transition duration-75 group-hover:text-orange-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
+                  <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z"/>
+                  <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"/>
+               </svg>
+               <span class="ms-3">Assessor 3</span>
+            </a>
+         </li>
+   
+     
+      
+      </ul>
+      <div class="max-w-xl mt-20 mx-auto p-6 bg-white border border-gray-200 rounded-xl shadow-sm space-y-4">
+  <h2 class="text-xl font-semibold text-gray-800">Assigned Assessors</h2>
+
+  <div class="space-y-3">
+    <label class="flex items-center space-x-3">
+      <input type="checkbox" disabled
+             {% if project.assessor_1 %}checked{% endif %}
+             class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-default">
+      <span class="text-gray-700">Assessor 1</span>
+    </label>
+
+    <label class="flex items-center space-x-3">
+      <input type="checkbox" disabled
+             {% if project.assessor_2 %}checked{% endif %}
+             class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-default">
+      <span class="text-gray-700">Assessor 2</span>
+    </label>
+
+    <label class="flex items-center space-x-3">
+      <input type="checkbox" disabled
+             {% if project.assessor_3 %}checked{% endif %}
+             class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-default">
+      <span class="text-gray-700">Assessor 3</span>
+    </label>
+  </div>
+</div>
+      
+   </div>
+</aside>
+
+<main class="p-4 sm:ml-64 pt-20">
+ <form action="{{request.path}}" method="get">
+  {% if messages %}
+{% for message in messages %}
+   {% if message.tags == 'success' %}
+    {% include 'mbaMain/components/toast_success.html' with message=message %}
+    {% else %}
+        {% include 'mbaMain/components/toast_error.html' with message=message %}
+      {% endif %}
+    {% endfor %}
+{% endif %}
+
+      <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+    <div class="flex flex-col items-center gap-4 p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
+      <div class="w-full md:w-1/2">
+        <div class="flex items-center">
+          <label for="earch" class="sr-only">Search</label>
+          <div class="relative w-full space-y-2">
+            <input
+              type="text"
+              name="search"
+              value="{{search}}"
+              id="search"
+              class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="Name, surname, email"
+              
+            />
+            <!-- <input
+              type="text"
+              name="block_id"
+              id="search"
+              class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="Enter student block id number"
+              
+            /> -->
+          </div>
+          <input type="hidden" name="page" value="0">
+        </div>
+      </div>
+      <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
+        <div class="flex items-center w-full space-x-3 md:w-auto">
+          <button class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700" type="submit">
+            Search
+          </button>
+    </div>
+     
+        </div>
+      </div>
+    </div>
+    </form>
+    <div class="flex flex-wrap gap-6 justify-center px-4 py-6">
+  {% for assessor in assessors %}
+    <div class="w-full md:w-65 bg-white border border-gray-200 shadow-md rounded-xl p-5 flex flex-col justify-between">
+      <div class="mb-4">
+        <h2 class="text-lg font-bold text-gray-800">
+          {{ assessor.title|default:"" }} {{ assessor.name }} {{ assessor.surname }}
+        </h2>
+        <p class="text-sm text-gray-500">{{ assessor.qualification }}</p>
+      </div>
+
+      <div class="space-y-1 text-sm text-gray-700">
+        <p><span class="font-semibold">Affiliation:</span> {{ assessor.affiliation }}</p>
+        <p><span class="font-semibold">Current:</span> {{ assessor.current_affiliation }}</p>
+        <p><span class="font-semibold">Email:</span>
+          <a href="mailto:{{ assessor.email }}" class="text-blue-600 hover:underline">
+            {{ assessor.email }}
+          </a>
+        </p>
+        <p><span class="font-semibold">Phone:</span> {{ assessor.cell_phone }}</p>
+        <p><span class="font-semibold">Students:</span> {{ assessor.number_of_students_supervised }}</p>
+        <p><span class="font-semibold">Publications:</span> {{ assessor.number_publications }}</p>
+        <p><span class="font-semibold">Experience:</span> {{ assessor.academic_experience }} yrs</p>
+        <p><span class="font-semibold">International:</span> 
+          {% if assessor.international_assessor %}
+            <span class="text-green-600 font-medium">Yes</span>
+          {% else %}
+            <span class="text-red-600 font-medium">No</span>
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="mt-4 flex justify-center">
+        <form action="{{request.path}}?project_id={{project_id}}"
+          method="post"
+        >
+          {%csrf_token%}
+          <input type="hidden" name="id" value="{{ assessor.id }}">
+          <button 
+           class="inline-block px-4 mx-auto py-2 w-full bg-orange-600 text-white text-sm rounded-md hover:bg-orange-400 transition text-center">
+          Appoint Assessor
+        </button>
+        </form>
+      </div>
+    </div>
+
+    {% empty %}
+    <p class="text-gray-500 text-center w-full">No assessors found.</p>
+    {% endfor %}
+  </div>
+  {%if assessors %}
+       {%include 'mbaMain/components/paginationButtons.html' with next=next prev=prev%}
+  {%endif%}
+
+</main>
+
+    
+
+    <script src="{%static 'mbamain/js/flowbite.min.js'%}"></script>
+   
+  </body>
+<

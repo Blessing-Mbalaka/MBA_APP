@@ -1,0 +1,3 @@
+Good day,
+You’ve been appointed as the supervisor for the project titled {{project_title}}.
+Please log in to the system to view the full project details and begin supervising the student.

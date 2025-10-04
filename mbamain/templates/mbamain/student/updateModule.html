@@ -1,0 +1,102 @@
+<!-- @format -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Module</title>
+
+  <link rel="stylesheet" href="{% static 'mbamain/styles/styles.css' %}">
+  </head>
+  <body >
+<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+  <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-center rtl:justify-center ">
+        <button  type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+               <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+            </svg>
+         </button>
+        <a href="" class="flex ms-2 md:me-24">
+          <img src="{%static 'mbamain/img/jbs_uj_logo.png' %}" class="h-8 " alt="JBS Logo" />
+        </a>
+      </div>
+      <div class="flex items-center">
+          <div class="flex items-center ms-3">
+            <div>
+              <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                <span class="sr-only">Open user menu</span>
+                <img class="w-8 h-8 rounded-full" src="{%static 'mbamain/img/bg_bus.jpg'%}" alt="user photo">
+              </button>
+            </div>
+            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
+              <div class="px-4 py-3" role="none">
+                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                  Student  
+                </p>
+                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                  {{user.email}}
+                </p>
+              </div>
+              <ul class="py-1" role="none">
+                <li>
+                  <a href="{% url 'mba_main:index' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Projects</a>
+                </li>
+                <li>
+                  <a  href="{% url 'mba_main:signout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</nav>
+
+
+  <div class="p-4 mt-16 space-y-4 h-64 text-white bg-cover bg-center" style="background-image: url({% static 'mbamain/img/bg-2.jpg'%});">
+   
+{% if messages %}
+{% for message in messages %}
+   {% if message.tags == 'success' %}
+    {% include 'mbaMain/components/toast_success.html' with message=message %}
+    {% else %}
+        {% include 'mbaMain/components/toast_error.html' with message=message %}
+      {% endif %}
+    {% endfor %}
+{% endif %}
+
+  </div>
+    
+ <div class="-mt-40  ">
+          <div class="p-6 bg-white  rounded-lg shadow space-y-4 md:w-1/2 w-full mx-auto">
+              <h1 class="text-xl text-center font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                  Module Currently Registered For
+              </h1>
+              <form class="space-y-4 " action="{%url 'mba_main:update_module'%}" method="post">
+                {%csrf_token%}
+                  <div>
+                      <label for="module" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Module</label>
+                      <input type="text" name="module_name" id="module" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Module name" required="">
+                  </div>
+                  <div>
+                      <label for="Email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                      <input type="email" name="email" id="Email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Email"
+                       required="">
+                  </div>
+                  <div>
+                      <label for="passsword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                      <input type="password" name="password" id="passsword" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="password" required="">
+                  </div>
+                   <button class="bg-blue-500 w-full text-white block font-bold py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">Update Module</button>
+              </form>
+          </div>
+      </div>
+    
+    <script src="{%static 'mbamain/js/flowbite.min.js'%}"></script>
+  </body>

@@ -1,0 +1,82 @@
+{%extends 'mbamain/scholar/base_scholar.html'%}
+
+{% load static %}
+
+{%block title %} Invites {% endblock title %}
+
+
+
+{% block content%}
+<div class="space-y-12">
+{% if messages %}
+{% for message in messages %}
+   {% if message.tags == 'success' %}
+    {% include 'mbaMain/components/toast_success.html' with message=message %}
+    {% else %}
+        {% include 'mbaMain/components/toast_error.html' with message=message %}
+      {% endif %}
+    {% endfor %}
+{% endif %}
+
+   {%if invites %}
+    {%for invite in invites%}
+      <div class="p-4 rounded-md shadow-md space-y-4">
+      <div class="flex justify-between">
+         <h1 class="font-medium text-gray-700">
+            {{invite.project.project_title}}
+         </h1>
+         <span class="text-gray-500">
+             {{invite.created_at|date:"d M Y H:i"}}
+         </span>
+      </div>
+      <p class="text-gray-700">
+         Will you be willing to supervise this project by <strong>
+            {{invite.project.student.student_profile.name}} {{invite.project.student.student_profile.surname}}
+         </strong>? Below is a short description of the project. 
+
+      </p>
+
+      <p class="p-2 bg-gray-200 rounded-md text-gray-600">
+         {{invite.project.project_description}}
+      </p>
+      <div>
+         <div class="p-2 bg-gray-100 rounded-md text-gray-600">
+            <p>
+            Student Details: {{invite.project.student.student_profile.title}} {{invite.project.student.student_profile.name}} {{invite.project.student.student_profile.surname}} ({{invite.project.student.student_profile.student_no}})
+         </p>
+          <p>
+            Student Email: <a  class="text-blue-500 hover:underline">{{invite.project.student.email}}</a>
+          </p>
+         <p>
+            Student Phone: <a href="tel:{{invite.project.student.student_profile.phone}}" class="text-blue-500 hover:underline">{{invite.project.student.student_profile.contact}}</a>
+            </p>
+         </div>
+      </div>
+      <hr class="text-gray-300">
+      <div class="flex gap-4">
+          <form method="post" action="{%url 'mba_main:accept_invite' invite_id=invite.id %}">
+            {% csrf_token %}
+            <button
+          class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-lg md:w-auto bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300  focus:outline-none"
+         >Accept</button>
+          </form>
+          <form method="post" action="{%url 'mba_main:decline_invite' invite_id=invite.id %}">
+            {% csrf_token %}
+            <button 
+          class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-lg md:w-auto bg-red-500 hover:bg-red-800 focus:ring-4 focus:ring-red-300  focus:outline-none"
+         >Decline</button>
+          </form>
+         
+      </div>
+   </div>
+   {%endfor%}
+   {%else%}
+   <div class="bg-orange-400 p-4 rounded-lg text-center shadow-md h-40 text-white mb-4 flex justify-center items-center">
+ 
+      <h1 class="text-lg font-medium">No New Invitations</h1>
+</div>
+     
+   {%endif%}   
+</div>
+{% endblock content %}
+

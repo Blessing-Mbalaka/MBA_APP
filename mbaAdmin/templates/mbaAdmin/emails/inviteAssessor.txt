@@ -1,0 +1,3 @@
+Good day,
+You are invited to assess project <strong>{{ project.project_title}}</strong> on our MBA platform!
+Login on to the platform to accept the invitation and project.

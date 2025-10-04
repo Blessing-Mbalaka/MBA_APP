@@ -1,0 +1,5 @@
+Good day,
+Your appointed  supervisor  for the project titled {{project_title}} is {{project.get_supervisor.supervisor_profile.title}} {{project.get_supervisor.supervisor_profile.first_name}} {{project.get_supervisor.supervisor_profile.last_name}}.
+Please log in to the system to view the full project to sign the necessary documents.
+kind regards,
+JBS (johannesburg Business School)

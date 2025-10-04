@@ -1,0 +1,5 @@
+Good day,
+{{message}}
+Please log in to the system to view the full project to view the comment.
+kind regards,
+JBS (johannesburg Business School)

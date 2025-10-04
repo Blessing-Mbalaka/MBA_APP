@@ -1,0 +1,51 @@
+{%extends 'mbaAdmin/base.html'%}
+
+{% load static %}
+
+{%block title %} Activities {% endblock title %}
+
+<!-- These should be system wide activities -->
+{% block content%}
+<div class="space-y-12">
+    <header class="h-40 p-4 w-full bg-[url({% static 'mbamain/img/bg_bus.jpg'%})]   rounded-sm bg-center bg-cover bg-no-repeat space-y-2" style="background-image: url({% static 'mbamain/img/bg-2.jpg'%});">
+       <h1 class="text-white font-medium text-2xl ">
+        Hello, Admin
+       </h1>
+       <p class="text-white">
+       {% now "Y-m-d H:i:s" %}
+       </p>
+       <div>
+
+       </div>
+    </header>
+<div class="flex flex-wrap gap-4 justify-center mt-4">
+    <div class="w-full p-8 md:w-1/5 bg-orange-400 p-4 rounded-lg text-center text-white">
+        <h1 class="font-medium">Total Sudents</h1>
+        <h3>
+          {{students_no}}
+        </h3>
+    </div>
+    <div class="w-full p-8 md:w-1/5 bg-blue-400 p-4 rounded-lg text-center text-white">
+        <h1 class="font-medium">Total Supervisors</h1>
+        <h3>
+            {{supervisors_no}}
+        </h3>
+    </div>
+    <!-- <div class="w-full p-8 md:w-1/5 bg-yellow-400 p-4 rounded-lg text-center text-white">
+        <h1 class="font-medium">Ethics Submitted</h1>
+        <h3>
+            174
+        </h3>
+    </div> -->
+    <div class="w-full p-8 md:w-1/5 bg-gray-400 p-4 rounded-lg text-center text-white">
+        <h1 class="font-medium">Examminers</h1>
+        <h3>
+            {{examiners_no}}
+        </h3>
+    </div>
+</div>
+
+
+</div>
+{% endblock content %}
+

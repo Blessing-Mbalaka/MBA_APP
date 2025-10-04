@@ -1,0 +1,238 @@
+<!-- @format -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Project</title>
+
+  <link rel="stylesheet" href="{% static 'mbamain/styles/styles.css' %}">
+
+  </head>
+
+  <body >
+    
+<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+  <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-center rtl:justify-center ">
+        <button  type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+               <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+            </svg>
+         </button>
+        
+           <a href="{%url 'mba_main:projects_scholar'%}" class="flex ms-2 md:me-24">
+              <span class="ms-3">&LeftArrow; Back</span>
+            </a>
+       
+      </div>
+      <div class="flex items-center">
+          <div class="flex items-center ms-3">
+            <div>
+              <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                <span class="sr-only">Open user menu</span>
+                <img class="w-8 h-8 rounded-full" src="{%static 'mbamain/img/bg_bus.jpg'%}" alt="user photo">
+              </button>
+            </div>
+            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
+              <div class="px-4 py-3" role="none">
+                {%if user.user_type == 3 %} Student {%endif%}  
+                {%if user.user_type == 2 %} Scholar {%endif%}  
+                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                  {{ user.username }}
+                </p>
+              </div>
+              <ul class="py-1" role="none">
+                <li>
+                  <a href="{% url 'mba_main:index_scholar' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Invites</a>
+                </li>
+                <li>
+                  <a href="{% url 'mba_main:projects_scholar' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Manage Projects</a>
+                </li>
+                <li>
+                  <a href="{% url 'mba_main:profile_scholar' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Profile</a>
+                </li>
+
+                <li>
+                  <a href="{% url 'mba_main:signout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</nav>
+
+  <div class="p-4 mt-16 space-y-4 text-white bg-cover bg-center" style="background-image: url({% static 'mbamain/img/bg-2.jpg'%});">
+    <h1 class="text-3xl">
+        Project title : {{project.project_title}}
+    </h1>
+    <h1>
+        by {{project.student.student_profile.title}} {{project.student.student_profile.name}} {{project.student.student_profile.surname}} ({{project.student.student_profile.student_no}})
+    </h1>
+     <p><span class="font-medium text-blue-600 dark:text-blue-400">SDG goal:</span> {{project.sdg_goal}}</p>
+    <p class="text-sm">
+       Project started on {{project.created_date|date:"d M Y H:i"}}
+    </p>
+  </div>
+    
+  <div class="min-h-screen bg-gray-100">
+     {% if messages %} {% for message in messages %} {% if message.tags == 'success' %} {% include 'mbaAdmin/components/toast_success.html' with message=message %} {% else %} {% include 'mbaAdmin/components/toast_error.html' with message=message %} {% endif %} {% endfor %} {% endif %}
+    <div class="p-4 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 flex justify-center items-center gap-4 flex-wrap">
+       {% if not project.title_approved  %}
+          
+       {% if  project.project_status == project.ProjectStatus.JBS5_Admin_declined or project.project_status == project.ProjectStatus.JBS5_HDC_declined or project.project_status == project.ProjectStatus.CREATED %} 
+
+        {%if project.jbs5_form.supervisor_signed %} 
+        
+        <form id="jbs-form-sub" action="{%url 'mba_main:submit_jbs5_form' %}" method="post">
+                  {% csrf_token %}
+                    <input type="hidden" name="project_id" value="{{project.id}}">
+                </form>
+        <button 
+         form="jbs-form-sub"
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+         Submit JBS5 Form 
+       </button>
+        {%endif%}
+       
+        {%endif%}
+
+      {%endif%}
+     
+      {%if project.sp_form.student_signed and  project.title_approved %} 
+         {%if not project.intent_form_submitted  %}
+               <form id="notice-form" action="{%url 'mba_main:submit_notice_form' %}" method="post">
+                 {% csrf_token %}
+                   <input type="hidden" name="project_id" value="{{project.id}}">
+               </form>
+               <button
+               form="notice-form"
+                data-popover-target="popover-jbs10"
+               class="text-white bg-green-500 hover:bg-green-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                Submit Intent Form
+              </button>
+
+              <div data-popover id="popover-jbs10" role="tooltip" class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-xs opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+    <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
+        <h3 class="font-semibold text-gray-900 dark:text-white">Note</h3>
+    </div>
+    <div class="px-3 py-2">
+        <p>Make sure both the you and the student have signed the Itention form and JBS10 form</p>
+    </div>
+    <div data-popper-arrow></div>
+</div>
+         {%endif%}
+          
+         {%if  not project.nomination_form_submitted%}
+              <form id="nomination-form" action="{%url 'mba_main:submit_nomination_form' %}" method="post">
+                  {% csrf_token %}
+                    <input type="hidden" name="project_id" value="{{project.id}}">
+              </form>
+             <button 
+              form="nomination-form"
+             class="text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-yellow-400 dark:hover:bg-yellow-500 focus:outline-none dark:focus:ring-yellow-600">
+                Submit Nomination of Assessor Form
+             </button>
+             
+         {%endif%}
+
+
+
+      {%endif%}
+  </div>
+
+    <div class=" p-4 flex gap-4 flex-wrap justify-center">
+         
+      
+      {%if project.sp_form.student_signed %}
+      <a href="{%url 'mba_main:student_supervisor_form' project_id=project.id %}" class="cursor-pointer p-4 w-full md:w-1/4 text-white h-40 flex items-center justify-center font-medium bg-orange-400">
+        Student Supervisor Form
+      </a>
+    
+      
+      {%else%}
+      <a  class="cursor-pointer p-4 w-full md:w-1/4 text-white h-40 flex items-center justify-center font-medium bg-orange-400 opacity-50">
+        Student Supervisor Form
+      </a>
+    
+  
+        {%endif%}
+
+        {%if project.jbs5_form.student_signed %}
+        <a href="{%url 'mba_main:jbs5_form' project_id=project.id%}" class="cursor-pointer p-4 w-full md:w-1/4 text-white h-40 flex items-center justify-center font-medium bg-green-600">
+           JBS5 Form 
+        </a>
+        
+        {%else%}
+        <a  
+        
+        class="cursor-pointer p-4 w-full md:w-1/4 text-white opacity-50
+
+ h-40 flex items-center justify-center font-medium bg-green-600">
+           JBS5 Form 
+        </a>
+
+        {%endif%}
+         
+        {%if project.notice_form.student_signed%}
+        
+        <a href="{%url 'mba_main:notice_form' id=project.id%}" class="cursor-pointer p-4 w-full md:w-1/4 text-white h-40 flex items-center justify-center font-medium bg-gray-600">
+           Notice To Submit Form 
+        </a>
+        {%else%}
+        
+        <a 
+        
+        class="cursor-pointer p-4 w-full md:w-1/4 text-white opacity-50
+
+ h-40 flex items-center justify-center font-medium bg-gray-600">
+           Notice To Submit Form
+        </a>
+
+        {%endif%}
+         
+        {%if project.jbs10_form.student_signed%}
+        
+        <a href="{%url 'mba_main:jbs10_form' project_id=project.id%}" class="cursor-pointer p-4 w-full md:w-1/4 text-white h-40 flex items-center justify-center font-medium bg-blue-600">
+          JBS10
+        </a>
+        {%else%}
+        
+        <a 
+        
+        class="cursor-pointer p-4 w-full md:w-1/4 text-white opacity-50
+
+ h-40 flex items-center justify-center font-medium bg-gray-600">
+           JBS10
+        </a>
+
+        {%endif%}
+         
+
+        
+        <a 
+        href="{%url 'mba_main:nominaton_form' project_id=project.id %}"
+       class="cursor-pointer p-4 w-full md:w-1/4 text-white h-40 flex items-center justify-center font-medium bg-yellow-500">
+           Nomination of Assessor Form
+       </a>
+       
+        <a  
+         
+            
+        
+    </div>
+
+      
+
+    </div>
+     {%include 'mbamain/drawers/proposals.html'%}
+     {%include 'mbamain/drawers/reviewerReport.html'%}
+    <script src="{%static 'mbamain/js/flowbite.min.js'%}"></script>
+  </body>

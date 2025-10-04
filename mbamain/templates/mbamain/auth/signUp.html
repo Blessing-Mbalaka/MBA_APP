@@ -1,0 +1,53 @@
+<!-- @format -->
+
+{%extends 'mbamain/auth/base.html' %} {% load static %} {% block title %}Sign In{% endblock title %} 
+
+{% block content %}
+<form class="space-y-4 w-full md:w-96 bg-gray-100 p-4 rounded-sm shadow-md" method="POST"  action="{% url 'mba_main:signup' %}">
+   {% csrf_token %} 
+    {%if error %}  <div class="bg-red-100 text-red-700 px-4 py-3 rounded relative shadow-md" role="alert">
+    <strong class="font-bold">Error!</strong>
+    <span class="block sm:inline">{{ error }}</span>
+  </div>
+  {% endif %}
+  <div>
+    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+    <input
+      type="email"
+      name="email"
+      id="email"
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+      placeholder="name@uj.ac.za"
+      required
+    />
+  </div>
+  <div>
+    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
+    <input
+      type="password"
+      name="password"
+      id="password"
+      placeholder="••••••••"
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+      required
+    />
+    </div>
+  <div>
+    <label for="confirm_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm password</label>
+    <input
+      type="password"
+      name="confirm_password"
+      id="confirm_password"
+      placeholder="••••••••"
+      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+      required
+    />
+  </div>
+  <button type="submit" class="w-full text-white bg-orange-400 hover:bg-orange-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Register</button>
+  <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+   Already have an account ?
+    <a href="{%url 'mba_main:signin' %}" class="text-orange-400 hover:underline dark:text-blue-500">Sign in instead</a>
+  </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,88 @@
+<!-- @format -->
+
+{%extends 'mbamain/student/base_student.html'%} {% load static %} {%block title %} Projects {% endblock title %} {% block content%} 
+
+{% if messages %}
+{% for message in messages %}
+   {% if message.tags == 'success' %}
+    {% include 'mbaMain/components/toast_success.html' with message=message %}
+    {% else %}
+        {% include 'mbaMain/components/toast_error.html' with message=message %}
+      {% endif %}
+    {% endfor %}
+{% endif %}
+
+<div class="space-y-8">
+{%if projects %}
+ {%else%}
+   <div class="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 md:rounded-lg">
+    <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
+      <button
+        data-modal-target="create_project_model"
+        data-modal-toggle="create_project_model"
+        class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white rounded-lg md:w-auto bg-orange-500 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none"
+      >
+        <svg class="h-3.5 w-3.5 mr-2 -ml-1" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+        </svg>
+        Add Project
+      </button>
+
+      <div class="inline-flex flex-col w-full rounded-md shadow-sm md:w-auto md:flex-row" role="group">
+        
+      </div>
+    </div>
+  </div>
+{%endif%}
+
+  <!-- table -->
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
+     {%if projects %}
+   
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+          <th scope="col" class="px-6 py-3">Project Title</th>
+          <th scope="col" class="px-6 py-3">Date</th>
+          <th scope="col" class="px-6 py-3">Discipline</th>
+          <th scope="col" class="px-6 py-3">Status</th>
+          <th scope="col" class="px-6 py-3">Comment</th>
+          <th scope="col" class="px-6 py-3">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%for project in projects %}
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+          <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{project.project_title}}</th>
+          <td class="px-6 py-4">{{project.project_start_date}}</td>
+          <td class="px-6 py-4">{{project.discipline}}</td>
+          <td class="px-6 py-4">{{project.format_project_status}} </td>
+           <td class="px-6 py-4">
+             {%include 'mbamain/modals/projectComments.html' with modal_id=project.id project=project %} 
+            <button  data-modal-target="project-comments-{{project.id}}" data-modal-toggle="project-comments-{{project.id}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">comments</button>
+          </td>
+          <td class="px-6 py-4 flex justify-between gap-4 items-center">
+            {%include 'mbamain/modals/updateProject.html' with model_id=project.id project=project %} 
+
+            {% if project.project_status == project.ProjectStatus.CREATED %}
+            <button  data-modal-target="{{project.id}}" data-modal-toggle="{{project.id}}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+            {%endif%}
+            
+            <a href="{%url 'mba_main:student_manage_project' id=project.id%}"   class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Forms</a>
+          </td>
+        </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+
+    {% else %}
+    <div class="h-40 bg-orange-500 rounded-lg flex items-center justify-center">
+      <p class="text-white text-lg">No projects found</p>
+    </div>
+    {%endif%}
+  </div>
+
+</div>
+
+{%include 'mbamain/modals/createProject.html' with model_id='create_project_model' %} 
+{%endblock %}

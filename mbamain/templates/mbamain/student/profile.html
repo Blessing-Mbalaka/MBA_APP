@@ -1,0 +1,114 @@
+<!-- @format -->
+
+{%extends 'mbamain/student/base_student.html'%} {% load static %} {%block title %} Profile {% endblock title %} {% block content%}
+
+
+{%include 'mbamain/modals/addCV.html' with modal_id="add-cv"%}
+{%include 'mbamain/modals/addSignature.html' with modal_id="add-sig"%}
+{%include 'mbamain/modals/confirmUpload.html' with modal_id="add-cv-confirm"%}
+{%include 'mbamain/modals/signConfirm.html' with modal_id="confirm"%}
+{%include 'mbamain/modals/updateStudentProfile.html' with modal_id="update-student-profile" profile=profile%}
+
+{% if messages %}
+{% for message in messages %}
+   {% if message.tags == 'success' %}
+    {% include 'mbaMain/components/toast_success.html' with message=message %}
+    {% else %}
+        {% include 'mbaMain/components/toast_error.html' with message=message %}
+      {% endif %}
+    {% endfor %}
+{% endif %}
+ 
+<div class="relative space-y-8 shadow-md p-4 rounded-md select-none">
+  <div class="flex flex-row mb-20 justify-between h-64 bg-green-900 p-4 bg-center bg-cover bg-no-repeat" style="background-image: url({% static 'mbamain/img/bg-2.jpg'%});">
+    <span></span>
+    <button 
+    data-modal-target="update-student-profile"
+    data-modal-toggle="update-student-profile"
+    class="text-blue-600 cursor-pointer bg-gray-100 p-2 self-start rounded-lg">Edit profile</button>
+  </div>
+  <div class="flex flex-col items-center space-y-2 absolute top-8 left-1/2 transform -translate-x-1/2 bg-white shadow-md p-4 rounded-sm">
+    {%if user.has_profile%} 
+     <img src="{% static 'mbamain/img/person.png' %}" alt="Profile Picture" style="width: 6rem; height: 6rem" class="rounded-full" />
+    <div class="text-center space-y-2 text-gray-400">
+      
+      <h1>{{user.student_profile.title}} {{user.student_profile.name}}  {{user.student_profile.surname}}</h1>
+      <h3>{{user.student_profile.student_no}}</h3>
+      <h3>{{user.student_profile.contact}}</h3>
+      <h3>{{user.email}}</h3>
+      <h3>{{user.student_profile.secondary_email}}</h3>
+    </div>
+    {%else%}
+       <h1>
+         Please complete your profile to view your information.
+           <div class="mt-8 flex justify-center">
+              <button 
+    data-modal-target="update-student-profile"
+    data-modal-toggle="update-student-profile"
+    class="text-blue-600 cursor-pointer bg-gray-100 p-2 self-start mx-auto rounded-lg">Create Profile</button>
+           </div>
+  </div>
+       </h1>
+    {%endif%}
+  </div>
+
+  <!-- <div class="space-y-3">
+    <h1 class="text-white font-medium p-2" style="background-color: #ff5a00">Attachments</h1>
+    <div class="space-y-2">
+      <div class="flex justify-between items-center">
+        <span>curriculum vitae</span>
+
+        <div class="flex justify-between gap-4 mb-2">
+         <button class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
+          data-modal-target="add-cv"
+          data-modal-toggle="add-cv"
+          type="button"
+          >
+           Upload
+         </button>      
+          <a
+            href="{% url 'mba_main:download_cv' %}"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-100 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+          >
+            <svg class="w-3.5 h-3.5 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z" />
+              <path d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" />
+            </svg>
+            Download
+          </a>
+        </div>
+      </div>
+      <div class="flex justify-between items-center">
+        <span>signature</span>
+
+        <div class="flex justify-between gap-4 mb-2">
+          {%if user.has_signature %} 
+           <span></span>
+          {%else%}
+          <button class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
+           data-modal-target="add-sig"
+           data-modal-toggle="add-sig"
+           type="button"
+           >
+            Upload
+          </button>      
+          {%endif%}
+          <a
+            href="{% url 'mba_main:download_signature' %}"
+            class="  inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-100 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+          
+          >
+            <svg class="w-3.5 h-3.5 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z" />
+              <path d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" />
+            </svg>
+            Download
+          </a>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <a class="text-center bg-red-500 text-white p-2 rounded-md w-full block" href="{%url 'mba_main:get_reset_token'%}">Reset Password</a>
+</div>
+{%endblock %}

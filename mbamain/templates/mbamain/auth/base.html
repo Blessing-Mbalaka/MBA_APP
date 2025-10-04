@@ -1,0 +1,17 @@
+<!-- @format -->
+
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'mbamain/styles/styles.css' %}" />
+    <title>{%block title%} {%endblock%}</title>
+  </head>
+  <body style="background-image: url({% static 'mbamain/img/bg.jpg'%}); height: 100vh" class="bg-cover bg-no-repeat flex justify-center items-center p-4">
+    {%block content %} {%endblock%}
+    <script src="{%static 'mbamain/js/flowbite.min.js'%}"></script>
+  </body>
+</html>

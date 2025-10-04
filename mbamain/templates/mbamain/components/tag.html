@@ -1,0 +1,21 @@
+<span   
+data-popover-target="popover-default-{{skill.name}}"
+class="tag cursor-pointer select-none">
+    {{skill.name}}
+</span>
+
+
+<button
+form="popover-default-{{skill.id}}"
+type="submit"
+data-popover id="popover-default-{{skill.name}}" role="tooltip" class="absolute z-10 invisible inline-block px-4 text-sm text-gray-500 transition-opacity duration-300 bg-red-500  p-2 text-white rounded-full shadow-xs opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800 text-center">
+    <h1>
+        Remove
+    </h1>
+    <div data-popper-arrow></div>
+</button>
+
+<form id="popover-default-{{skill.id}}" action="{%url 'mba_main:remove_research_interest'%}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="skill" value="{{skill.name}}" />
+</form>

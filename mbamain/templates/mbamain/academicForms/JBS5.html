@@ -1,0 +1,342 @@
+<!-- @format -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JBS5 Form</title>
+
+    <link rel="stylesheet" href="{% static 'mbamain/styles/styles.css' %}" />
+  </head>
+
+  <body>
+   
+{%if request.user.is_admin or request.user.is_hdc %}
+{%else%}
+<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+  <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-center rtl:justify-center ">
+        <button  type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+            <span class="sr-only">Open sidebar</span>
+            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+               <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
+            </svg>
+         </button>
+     
+        {%if request.user.is_student%}
+            <a href="{%url 'mba_main:student_manage_project' id=project.id %}" class="flex ms-2 md:me-24">
+              <span class="ms-3">&LeftArrow; Back</span>
+            </a>
+            {%else%}
+            <a href="{%url 'mba_main:manage_project' id=project.id %}" class="flex ms-2 md:me-24">
+              <span class="ms-3">&LeftArrow; Back</span>
+            </a>
+            {%endif%}
+      </div>
+      <div class="flex items-center">
+          <div class="flex flex-row gap-4 items-center ms-3">
+            <div id="printer" class="cursor-pointer" >
+       <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#1f1f1f"><path d="M640-640v-120H320v120h-80v-200h480v200h-80Zm-480 80h640-640Zm560 100q17 0 28.5-11.5T760-500q0-17-11.5-28.5T720-540q-17 0-28.5 11.5T680-500q0 17 11.5 28.5T720-460Zm-80 260v-160H320v160h320Zm80 80H240v-160H80v-240q0-51 35-85.5t85-34.5h560q51 0 85.5 34.5T880-520v240H720v160Zm80-240v-160q0-17-11.5-28.5T760-560H200q-17 0-28.5 11.5T160-520v160h80v-80h480v80h80Z"/></svg>
+   </div>
+            <div>
+              <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                <span class="sr-only">Open user menu</span>
+                <img class="w-8 h-8 rounded-full" src="{%static 'mbaAdmin/img/bg_bus.jpg'%}" alt="user photo">
+              </button>
+            </div>
+            <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
+              <div class="px-4 py-3" role="none">
+                <p class="text-sm text-gray-900 dark:text-white" role="none">
+                   {%if user.user_type == 3 %} Student {%endif%}  
+                   {%if user.user_type == 2 %} Scholar {%endif%}  
+                  </p>
+                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+                 {{user.email}}
+                </p>
+              </div>
+              <ul class="py-1" role="none">
+        
+                <li>
+                  <a href="{% url 'mba_main:projects' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Projects</a>
+                </li>
+                
+                <li>
+                  <a href="{% url 'mba_main:profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Profile</a>
+                </li>
+
+                <li>
+                  <a href="{% url 'mba_main:signout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</nav>
+{%endif%}
+    <div class="p-4 mt-16 space-y-4 text-white h-96 bg-cover bg-center" style="background-image: url({% static 'mbamain/img/bg-2.jpg' %})">
+      {% if messages %} {% for message in messages %} {% if message.tags == 'success' %} {% include 'mbaAdmin/components/toast_success.html' with message=message %} {% else %} {% include 'mbaAdmin/components/toast_error.html' with message=message %} {% endif %} {% endfor %} {% endif %}
+    </div>
+    <form class="-mt-80 mx-4 bg-white p-4 rounded-lg shadow-lg" method="post" action="{% url 'mba_main:sign_jbs5' project_id=project.id %}">
+      {%csrf_token%}
+      <!-- Header -->
+      <div class="flex border-black mb-4">
+        <div class="w-1/4 p-2 flex items-center justify-center">
+          <img src="{%static 'mbamain/img/jbs_uj_logo.png' %}" class="h-16" alt="JBS Logo" />
+        </div>
+        <div class="w-3/4 p-2">
+          <h1 class="text-xl font-bold">JOHANNESBURG BUSINESS SCHOOL</h1>
+          <p class="font-bold mt-2">REGISTRATION OF TITLE / AMENDMENT OF TITLE / AMENDMENT OF SUPERVISOR(S)</p>
+        </div>
+      </div>
+
+      <!-- Form Sections Header -->
+      <div class="flex border-black my-6">
+        <div class="w-full border border-black p-2">
+          <p class="font-bold">
+            REGISTRATION OF TITLE / SUPERVISOR/S
+            <span class="font-normal">(SECTION B)</span>
+          </p>
+          <div class="h-8"></div>
+          <p class="font-bold">
+            AMENDMENT OF TITLE
+            <span class="font-normal">(SECTION C)</span>
+          </p>
+          <div class="h-8"></div>
+          <p class="font-bold">
+            AMENDMENT OF SUPERVISOR(S)
+            <span class="font-normal">(SECTION D)</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- SECTION A: Information about the student -->
+      <div class="border-black p-2 mb-6">
+        <h2 class="font-bold text-lg mb-2">SECTION A: Information about the student</h2>
+
+        <div class="flex gap-2 mb-4">
+          <div class="w-1/2 flex gap-2 items-center">
+            <label for="surname" class="font-bold">Surname</label>
+            <input type="text" value="{{student.student_profile.surname}}" id="surname" class="flex-1 border-b border-black" />
+          </div>
+          <div class="flex-1 flex gap-2 items-center">
+            <label for="title" class="font-bold">Title</label>
+            <input type="text" value="{{project.student.student_profile.title}}" id="title" class="flex-1 border-b border-black" />
+          </div>
+        </div>
+        <div class="flex gap-2 mb-4">
+          <div class="w-1/2 flex gap-2 items-center">
+            <label for="Intials" class="font-bold">Intials</label>
+            <input type="text" name="initials" value="{{project.student.student_profile.get_initials}}" id="Intials" class="flex-1 border-b border-black" />
+          </div>
+          <div class="flex-1 flex gap-2 items-center">
+            <label for="registration date" class="font-bold">First registration date</label>
+            <input type="date" name="registration_date" 
+             {% if project.jbs5_form.registration_date %}
+  value="{{ project.jbs5_form.registration_date|date:'Y-m-d' }}"
+{% else %}
+  value="2025-01-01"
+{% endif %}
+            id="registration_date" class="flex-1 border-b border-black" />
+          </div>
+        </div>
+        <div class="flex gap-2 mb-4">
+          <div class="w-1/2 flex gap-2 items-center">
+            <label for="student_no" class="font-bold">Student number</label>
+            <input type="text" id="student_no" value="{{student.student_profile.student_no}}" class="flex-1 border-b border-black" />
+          </div>
+          <div class="flex-1 flex gap-2 items-center">
+            <label for="qualification" class="font-bold">Qualification</label>
+            <input type="text" id="qualification" name="qualification" value="{{project.student.student_profile.degree}}" class="flex-1 border-b border-black" />
+          </div>
+        </div>
+        <div class="flex gap-2 mb-4">
+          <div class="w-1/2 flex gap-2 items-center">
+            <label for="discipline" class="font-bold">Discipline</label>
+            <input type="text" value="{{project.discipline}}" id="discipline" class="flex-1 border-b border-black" />
+          </div>
+          <div class="flex-1 flex gap-2 items-center">
+            <label for="4ir" class="font-bold">4IR</label>
+            <select name="4ir" id="4ir">
+              <option {%if project.jbs5_form.ir == '1' %} selected {%endif%} value="1">Yes</option>
+              <option {%if project.jbs5_form.ir == '0' %} selected {%endif%} value="0">No</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="font-bold mb-1">Study type</div>
+        <div class="grid grid-cols-5 gap-1 text-center">
+          <div class="border border-black p-1">Capstone Consultancy Project</div>
+          <div class="border border-black p-1">Research essay</div>
+          <div class="border border-black p-1">Minor dissertation</div>
+          <div class="border border-black p-1">Dissertation</div>
+          <div class="border border-black p-1">Thesis</div>
+        </div>
+        <div class="grid grid-cols-5 gap-1 mt-1">
+          <div class="radio-container"><input type="radio" name="study_type" id="studyTypeCapstone" value="capstone" {% if project.jbs5_form.study_type == 'capstone' %} checked {% endif %}></div>
+          <div class="radio-container"><input type="radio" name="study_type" id="studyTypeEssay" value="research_essay" {% if project.jbs5_form.study_type == 'research_essay' %} checked {% endif %}></div>
+          <div class="radio-container"><input type="radio" name="study_type" id="studyTypeMinor" value="minor_dissertation" {% if project.jbs5_form.study_type == 'minor_dissertation' %} checked {% endif %}></div>
+          <div class="radio-container"><input type="radio" name="study_type" id="studyTypeDissertation" value="dissertation" {% if project.jbs5_form.study_type == 'dissertation' %} checked {% endif %}></div>
+          <div class="radio-container"><input type="radio" name="study_type" id="studyTypeThesis" value="thesis" {% if project.jbs5_form.study_type == 'thesis' %} checked {% endif %}></div>
+        </div>
+      </div>
+
+      <!-- SECTION B: Registration title -->
+      <div class="border-black p-2 mb-6">
+        <h2 class="font-bold text-lg mb-2">SECTION B: Registration title</h2>
+
+        <div class="mb-4">
+          <div class="font-bold mb-1">Proposed title (4) of thesis / dissertation / minor dissertation / research essay / research article/ Capstone Consultancy Project</div>
+          <textarea id="proposedTitle" name="title" class="border border-black p-2 h-16 w-full">{{project.project_title}}</textarea>
+        </div>
+
+        <div class="mb-4">
+          <div class="font-bold mb-1">Proposed supervisor (A)</div>
+          <textarea id="proposedSupervisor" name="proposed_supervisor" class="border border-black p-2 h-16 w-full">{{ project.jbs5_form.proposed_supervisor}}</textarea>
+        </div>
+
+        <div class="mb-4">
+          <div class="font-bold mb-1">Proposed co-supervisor(s) (D)</div>
+          <textarea id="proposedCoSupervisors" name="proposed_co_supervisor" class="border border-black p-2 h-16 w-full">{{project.jbs5_form.proposed_co_supervisor}}</textarea>
+        </div>
+      </div>
+
+      <!-- SECTION C: Amendment of title -->
+      <div class="border-black p-2 mb-6">
+        <h2 class="font-bold text-lg mb-2">SECTION C: Amendment of title</h2>
+
+        <div class="mb-4">
+          <div class="font-bold mb-1">Previously approved title (5) of thesis / dissertation / minor dissertation / research essay / Capstone Consultancy Project</div>
+          <textarea id="previousTitle" name="previous_title" class="border border-black p-2 h-16 w-full">{{project.jbs5_form.previous_title}}</textarea>
+        </div>
+
+        <div class="mb-4">
+          <div class="font-bold mb-1">Proposed amendment to title (6) of thesis / dissertation / minor dissertation / research essay / Capstone Consultancy Project</div>
+          <textarea id="amendedTitle" name="proposed_amendment_title" class="border border-black p-2 h-16 w-full">{{project.jbs5_form.proposed_amendment_title}}</textarea>
+        </div>
+      </div>
+
+      <!-- SECTION D: Amendment of supervisor(s) -->
+      <div class="border-black p-2 mb-6">
+        <h2 class="font-bold text-lg mb-2">SECTION D: Amendment of supervisor(s)</h2>
+
+        <div class="mb-4">
+          <div class="font-bold mb-1">Previously approved supervisor (B)</div>
+          <textarea id="previousSupervisor" name="previously_approved_supervisor" class="border border-black p-2 h-16 w-full">{{project.jbs5_form.previously_approved_supervisor}}</textarea>
+        </div>
+
+        <div class="mb-4">
+          <div class="font-bold mb-1">Previously approved co-supervisor(s) (E)</div>
+          <textarea id="previousCoSupervisors" name="previously_approved_co_supervisor" class="border border-black p-2 h-16 w-full">{{project.jbs5_form.previously_approved_co_supervisor}}</textarea>
+        </div>
+
+        <div class="mb-4">
+          <div class="font-bold mb-1">Amended supervisor (C)</div>
+          <textarea id="amendedSupervisor" name="amended_supervisor" class="border border-black p-2 h-16 w-full">{{project.jbs5_form.amended_supervisor}}
+          </textarea>
+        </div>
+
+        <div class="mb-4">
+          <div class="font-bold mb-1">Amended co-supervisor(s) (F)</div>
+          <textarea id="amendedCoSupervisors" name="amended_co_supervisor" class="border border-black p-2 h-16 w-full">{{project.jbs5_form.amended_co_supervisor}}
+          </textarea>
+        </div>
+      </div>
+
+      <!-- SECTION E: Declaration of research focus -->
+      <div class="border-black p-2 mb-6">
+        <h2 class="font-bold text-lg mb-2">SECTION E: Declaration of research focus</h2>
+
+        <div class="mb-4">
+          <div class="flex">
+            <div class="w-5/6">
+              <p>1. The proposed study field/title and/or amendment to study field/title is discipline specific in that it falls within the primary research field of the qualification. (Please indicate YES / NO)</p>
+            </div>
+            <div class="w-1/6 flex justify-center">
+              <select id="disciplineSpecific" name="research_specific" class="border border-black">
+                <option {%if project.jbs5_form.research_specific == False %} selected {%endif%} value="0">NO</option>
+                <option {%if project.jbs5_form.research_specific == True %} selected {%endif%} value="1">YES</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <div class="flex">
+            <div class="w-5/6">
+              <p>2. Is there a secondary focus in the proposed study field/title and/or amendment to study field/title? (Please indicate YES / NO)</p>
+            </div>
+            <div class="w-1/6 flex justify-center">
+              <select id="secondaryFocus" name="secondary_focus" class="border border-black" >
+                  <option 
+                   {%if project.jbs5_form.secondary_focus == False %} selected {%endif%}
+                  value="0">NO</option>
+                <option
+                 {%if project.jbs5_form.secondary_focus == True %} selected {%endif%}
+                value="1">YES</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4" id="secondaryFocusContainer" style="display: none">
+          <p class="font-bold">If you have answered 'YES' to the second question, please indicate the secondary focus:</p>
+          <textarea id="secondaryFocusDetails" class="border border-black p-2 h-16 w-full"></textarea>
+        </div>
+      </div>
+
+      {%if request.user.is_admin%}
+             {%else%}
+             <!-- 8. SIGNATORIES -->
+            <div class="mb-8">
+                 <div class="tex-center text-red-500 font-bold mb-4 my-4">
+            By clicking the button below, I confirm  that JBS will use this as my digital signature 
+          </div>
+              
+            </div>
+            {%if project.should_show_jbs5_btn%}
+            <button class="bg-blue-500 w-full text-white block font-bold py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" >
+                  Submit form
+            </button>
+
+            {%endif%}
+             {%endif%}
+              <div class="space-y-4">
+                {%if project.jbs5_form.student_signed%}
+                   <h1>
+                    Student signed
+                   </h1>
+              {%endif%}
+
+              {%if project.jbs5_form.supervisor_signed%}
+                   <h1>
+                     Supervisor signed
+                   </h1>
+              {%endif%}
+              </div>
+    </form>
+
+    <script src="{%static 'mbamain/js/flowbite.min.js'%}"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const printer = document.getElementById("printer");
+        printer.addEventListener("click", function () {
+          const elementsToHide = document.querySelectorAll("nav, button");
+          elementsToHide.forEach((element) => {
+            element.style.display = "none";
+          });
+          print();
+          // after printing, show the elements again
+          elementsToHide.forEach((element) => {
+            element.style.display = "";
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

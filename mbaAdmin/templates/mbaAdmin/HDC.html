@@ -1,0 +1,135 @@
+<!-- @format -->
+
+{%extends 'mbaAdmin/base.html'%} {% load static %} {% block title %}HDC{% endblock title %} 
+
+{%block content%} 
+ 
+ 
+ {% if messages %} 
+   {% for message in messages %} 
+        {% if message.tags == 'success' %}
+                {% include 'mbaAdmin/components/toast_success.html' with message=message %} 
+       {% else %} 
+        {% include 'mbaAdmin/components/toast_error.html' with message=message %} 
+      {% endif %} 
+   {% endfor %} 
+ {% endif %}
+
+<div class="container space-y-8">
+  <!-- Table header -->
+    <form action="{%url 'mba_admin:hdc'%}" method="get">
+      <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+    <div class="flex flex-col items-center gap-4 p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
+      <div class="w-full md:w-1/2">
+        <div class="flex items-center">
+          <label for="earch" class="sr-only">Search</label>
+          <div class="relative w-full space-y-2">
+            <!-- <input
+              type="text"
+              name="block_id"
+              value="{{block_id}}"
+              id="search"
+              class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="Enter block identifier"
+              
+            /> -->
+        
+            <input
+              type="text"
+              name="student_no"
+              value="{{student_no}}"
+              id="search"
+              class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="Enter student number"
+            />
+
+          </div>
+          <input type="hidden" name="page" value="0">
+          <input type="hidden" name="search" value="1">
+        </div>
+      </div>
+      <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
+        <div class="flex items-center w-full space-x-3 md:w-auto">
+          <button class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700" type="submit">
+            search
+          </button>
+    </div>
+     
+        </div>
+      </div>
+    </div>
+    </form>
+    <form id="rest-form" action="{%url 'mba_admin:students'%}" method="get" ></form>
+  </div>
+
+  <!-- Table header ends -->
+  <div class="relative overflow-x-auto shadow-md sm:rounded-lg p-4">
+    {%if projects %} 
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <tr>
+          <th scope="col" class="px-6 py-3">Student Details</th>
+          <th scope="col" class="px-6 py-3">Student Number</th>
+          <th scope="col" class="px-6 py-3">Supervisor</th>
+          <!-- <th scope="col" class="px-6 py-3">student Number</th> -->
+          <th scope="col" class="px-6 py-3">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+         {% for project in projects %}
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+          <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+            <img class="w-10 h-10 rounded-full" src="{%static 'mbaAdmin/img/person.png'%}" alt="Jese image" />
+            <div class="ps-3">
+              <div class="text-base font-semibold">{{project.student.student_profile.title}} {{project.student.student_profile.name}} {{project.student.student_profile.surname}} </div>
+              <div class="font-normal text-gray-500">{{project.student.email}}</div>
+            </div>
+          </th>
+          <td class="px-6 py-4">
+            <div class="flex items-center"> {{project.student.student_profile.student_no}}</div>
+          </td>
+          <td class="px-6 py-4">
+              <div class="ps-3">
+              <div class="text-base font-semibold">{{project.get_supervisor.supervisor_profile.title}} {{project.get_supervisor.supervisor_profile.name}} {{project.get_supervisor.supervisor_profile.surname}} </div>
+              <div class="font-normal text-gray-500">{{project.get_supervisor.email}}</div>
+            </div>
+          </td>
+       
+          <!-- <td class="px-6 py-4">
+            <div class="flex items-center">{{student.student_profile.student_no}} </div>
+          </td> -->
+          <td class="px-6 py-4">
+            <!-- Modal toggle -->
+            <a 
+            data-modal-target="details-{{project.id}}" data-modal-toggle="details-{{project.id}}"
+            type="button"  class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Details</a>
+            <a  type="button" 
+             data-modal-target="attachments-{{project.id}}" data-modal-toggle="attachments-{{project.id}}"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Attachments</a>
+            <a  type="button" 
+             data-modal-target="hdc-action-{{project.id}}" data-modal-toggle="hdc-action-{{project.id}}"
+            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Action</a>
+            {% include 'mbaAdmin/modals/details.html' with modal_id=project.id project=project  %} 
+            {% include 'mbaAdmin/modals/attachment.html' with modal_id=project.id project=project  %} 
+            {% include 'mbaAdmin/modals/hdcAction.html' with modal_id=project.id project=project  %} 
+          </td>
+        </tr>
+        {%endfor%} 
+        
+      </tbody>
+    </table>
+        {%else%}
+        <div class="h-40 bg-orange-500 rounded-lg flex items-center justify-center">
+          <p class="text-white text-lg">No new projects have been submitted </p>
+        </div>
+        {%endif%}
+        <div class="my-4">
+            <!-- Pagination -->
+            {%if projects %}
+            {% include 'mbaAdmin/components/paginationButtons.html' with prev=prev next=next %} 
+           
+           {%endif%}
+        </div>
+    </div>
+</div>
+{% endblock content%}
