@@ -8,7 +8,7 @@ from .Cv import Cv
 from .NoticeToSubmitForm import NoticeToSubmitForm
 from .Invite import Invite
 from  .StudentProfile import StudentProfile
-from .SupervisorProfile import SupervisorProfile
+from .supervisorProfile import SupervisorProfile
 from .StudentSupervisorForm import StudentSupervisorForm
 from .JBS5 import JBS5
 from .JBS10 import JBS10
