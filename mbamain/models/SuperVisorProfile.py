@@ -1,6 +1,6 @@
 from django.db import models
 
-class SupervisorProfile(models.Model):
+class supervisorProfile(models.Model):
     user = models.OneToOneField('mbamain.AUser', related_name='supervisor_profile', on_delete=models.CASCADE, null=False, blank=False)
     name = models.TextField(null=True, blank=True)
     surname = models.TextField(null=True, blank=True)  
