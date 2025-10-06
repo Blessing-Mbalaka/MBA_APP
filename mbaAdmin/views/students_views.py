@@ -86,7 +86,6 @@ def student_bulk_onboard(request):
             failed_emails = ''
             for row in ws.iter_rows(min_row=2, values_only=True):
                 title,surname, name, contact, student_no, student_email, secondary_email = row
-
                 try:
                     # Skip invalid/duplicate rows
                     if (
@@ -146,10 +145,10 @@ def student_bulk_onboard(request):
 
             messages.success(
                 request,
-                f"Students onboarded successfully. The following emails failed: {failed_emails}"
+                f"The following emails failed: {failed_emails}"
             )
-            if failed_count > 0:
-                messages.warning(request, f"{failed_count} students already existed or had invalid data.")
+            # if failed_count > 0:
+            #     messages.warning(request, f"{failed_count} students already existed or had invalid data.")
 
         except Exception as e:
             messages.error(request, f"An error occurred: {str(e)}")

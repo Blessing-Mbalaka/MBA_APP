@@ -1,6 +1,6 @@
 **/node_modules
 
-
+.env
 # ignore environment variable files
 .env.local
 .env.development.local

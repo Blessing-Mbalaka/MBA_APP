@@ -263,3 +263,6 @@ def upload_project(request, project_id):
         print(e)
         messages.error(request, "Project file was not uploaded.")
     return redirect(reverse("mba_admin:nomination_submitted",))
+
+
+

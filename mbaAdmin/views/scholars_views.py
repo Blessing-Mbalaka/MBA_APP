@@ -240,7 +240,7 @@ def onboard_examiners_bulk(request):
 
             messages.success(
                 request,
-                f"Examiners onboarded successfully. The following were not added: {failed}"
+                f"The following were not added: {failed}"
             )
 
         except Exception as e:

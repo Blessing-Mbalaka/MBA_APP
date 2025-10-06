@@ -13,8 +13,8 @@ from mbamain.models import AUser  # adjust import if your model lives elsewhere
 def insert_admin_user():
     """Insert a new admin user into mbamain_auser table with encrypted password."""
 
-    email = "admin2@uj.ac.za"
-    password_plain = "admin2@uj.ac.za"
+    email = "voldimuyumba57@gmail.com"
+    password_plain = "voldimuyumba57@gmail.com"
     hashed_pw = make_password(password_plain)
 
     # Create and save the new user

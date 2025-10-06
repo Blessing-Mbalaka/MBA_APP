@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import scholars_views, students_views, profile_views, auth_views, activities_views, research_interests_views, admins_views, Invite, hdc
+from .views import scholars_views, students_views, profile_views, auth_views, activities_views, research_interests_views, admins_views, Invite, hdc, admin
 
 app_name = "mba_admin"
 urlpatterns = [
@@ -61,6 +61,7 @@ urlpatterns = [
     path('deactivate/supervisor/<int:user_id>', admins_views.suspend_supervisor, name="suspend_supervisor"),
     path("reset/project/<int:project_id>", students_views.reset_project, name="reset_project"),
     path("upload/project<int:project_id>", admins_views.upload_project, name="upload_project"),
-
+    path('create/user', admin.create_user_view, name='create_user')
+ 
 ]
 
