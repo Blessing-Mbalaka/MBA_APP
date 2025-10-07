@@ -88,24 +88,39 @@
           <!-- <td class="px-6 py-4">
             <div class="flex items-center">{{student.student_profile.student_no}} </div>
           </td> -->
-          <td class="px-6 py-4">
-            <!-- Modal toggle -->
-            <a 
-            data-modal-target="jbs5-details-{{project.id}}" data-modal-toggle="jbs5-details-{{project.id}}"
-            type="button"  class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Details | </a>
-            <a  type="button" 
-             data-modal-target="attachments-{{project.id}}" data-modal-toggle="attachments-{{project.id}}"
-            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Attachments |</a>
-            {%if not project.project_status == project.ProjectStatus.JBS5_HDC_approved%} 
-            <a  type="button" 
-             data-modal-target="jbs5-action-{{project.id}}" data-modal-toggle="jbs5-action-{{project.id}}"
-            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Action</a>
-            
-            {%endif%}
-            {% include 'mbaAdmin/modals/jbs5Details.html' with modal_id=project.id project=project  %} 
-            {% include 'mbaAdmin/modals/jbs5Attachment.html' with modal_id=project.id project=project  %} 
-            {% include 'mbaAdmin/modals/jbs5Action.html' with modal_id=project.id project=project  %} 
-          </td>
+         <td class="px-6 py-4">
+  <!-- Modal toggle -->
+  <a 
+    data-modal-target="jbs5-details-{{ project.id }}" 
+    data-modal-toggle="jbs5-details-{{ project.id }}"
+    type="button"  
+    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+    Details |
+  </a>
+  
+  <a  
+    type="button" 
+    data-modal-target="attachments-{{ project.id }}" 
+    data-modal-toggle="attachments-{{ project.id }}"
+    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+    Attachments |
+  </a>
+
+  {% if project.project_status != project.ProjectStatus.JBS5_HDC_approved %}
+  <a  
+    type="button" 
+    data-modal-target="jbs5-action-{{ project.id }}" 
+    data-modal-toggle="jbs5-action-{{ project.id }}"
+    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+    Action |
+  </a>
+  {% endif %}
+
+  {% include 'mbaAdmin/modals/jbs5Details.html' with modal_id=project.id project=project %} 
+  {% include 'mbaAdmin/modals/jbs5Attachment.html' with modal_id=project.id project=project %} 
+  {% include 'mbaAdmin/modals/jbs5Action.html' with modal_id=project.id project=project %} 
+</td>
+
         </tr>
         {%endfor%} 
         
