@@ -144,9 +144,9 @@
   {% if messages %}
 {% for message in messages %}
    {% if message.tags == 'success' %}
-    {% include 'mbaMain/components/toast_success.html' with message=message %}
+    {% include 'mbamain/components/toast_success.html' with message=message %}
     {% else %}
-        {% include 'mbaMain/components/toast_error.html' with message=message %}
+        {% include 'mbamain/components/toast_error.html' with message=message %}
       {% endif %}
     {% endfor %}
 {% endif %}
@@ -239,7 +239,7 @@
     {% endfor %}
   </div>
   {%if assessors %}
-       {%include 'mbaMain/components/paginationButtons.html' with next=next prev=prev%}
+       {%include 'mbamain/components/paginationButtons.html' with next=next prev=prev%}
   {%endif%}
 
 </main>

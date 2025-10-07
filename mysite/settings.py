@@ -11,8 +11,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY SETTINGS
 # ========================
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-temp-key')
-DEBUG = config('DEBUG', default=False, cast=bool)
-
+# DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
