@@ -9,7 +9,7 @@
 <div class="space-y-12">
     <header class="h-40 p-4 w-full bg-[url({% static 'mbamain/img/bg_bus.jpg'%})]   rounded-sm bg-center bg-cover bg-no-repeat space-y-2" style="background-image: url({% static 'mbamain/img/bg-2.jpg'%});">
        <h1 class="text-white font-medium text-2xl ">
-        Hello, Admin
+        Hello, {{user.email}}
        </h1>
        <p class="text-white">
        {% now "Y-m-d H:i:s" %}
