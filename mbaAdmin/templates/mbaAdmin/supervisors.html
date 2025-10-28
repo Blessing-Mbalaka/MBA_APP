@@ -122,7 +122,7 @@
           <td class="px-6 py-4">
             <div class="flex items-center">{{scholar.supervisor_profile.contact}} </div>
           </td>
-          <td class="px-6 py-4">
+           <td class="px-6 py-4">
                 {%if scholar.is_active %} 
               
             <a href="{%url 'mba_admin:suspend_supervisor' user_id=scholar.id%}" type="button"  class="font-medium text-red-600 dark:text-red-500 hover:underline">Suspends</a>
