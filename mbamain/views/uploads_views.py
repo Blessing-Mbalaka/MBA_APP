@@ -66,16 +66,27 @@ def upload_cv(request):
 
 
 @require_auth
+@require_auth
 def download_cv(request):
     if request.method == "GET":
         try: 
             cv_id = request.GET.get("id")
-            cv = get_object_or_404(Cv, pk=cv_id).cv_file
-            file_path = cv.path
+            if not cv_id:
+                messages.error(request, "No CV ID provided.")
+                return redirect("mba_main:profile_scholar" if request.user.is_scholar() else "mba_main:profile")
+            
+            cv_obj = get_object_or_404(Cv, pk=cv_id)
+            file_path = cv_obj.cv_file.path
             with open(file_path, 'rb') as file:
                 response = HttpResponse(file.read(), content_type='application/pdf')
-                response['Content-Disposition'] = f'attachment; filename="{cv.name}"'
+                response['Content-Disposition'] = f'attachment; filename="{cv_obj.cv_file.name}"'
                 return response
+        except Cv.DoesNotExist:
+            messages.error(request, "CV not found. Please upload a CV first.")
+            return redirect("mba_main:profile_scholar" if request.user.is_scholar() else "mba_main:profile")
+        except FileNotFoundError:
+            messages.error(request, "CV file not found on the server. Please re-upload your CV.")
+            return redirect("mba_main:profile_scholar" if request.user.is_scholar() else "mba_main:profile")
         except Exception as e:
             messages.error(request, f"An error occurred while downloading the CV - {str(e)}")
             return redirect("mba_main:profile_scholar" if request.user.is_scholar() else "mba_main:profile")
