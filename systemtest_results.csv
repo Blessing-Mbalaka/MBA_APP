@@ -1,0 +1,41 @@
+Test_ID,User_Role,Category,Test_Name,Expected_Result,Actual_Result,Status,Notes,Timestamp
+T0001,SYSTEM,Setup,STUDENT user setup,STUDENT user exists,User ID: 90,PASS,,2026-03-12T15:50:18.566155
+T0002,SYSTEM,Setup,SCHOLAR user setup,SCHOLAR user exists,User ID: 91,PASS,,2026-03-12T15:50:20.113260
+T0003,SYSTEM,Setup,EXAMINER user setup,EXAMINER user exists,User ID: 92,PASS,,2026-03-12T15:50:22.538347
+T0004,SYSTEM,Setup,ADMIN user setup,ADMIN user exists,User ID: 93,PASS,,2026-03-12T15:50:24.871969
+T0005,STUDENT,Workflow,Student user creation,User created,User created,PASS,ID: 94,2026-03-12T15:50:26.630043
+T0006,STUDENT,Workflow,Student profile auto-creation,Profile auto-created,Profile exists,PASS,Profile ID: 25,2026-03-12T15:50:26.633527
+T0007,STUDENT,Workflow,Profile data persistence,Data persists after save,Data persisted,PASS,,2026-03-12T15:50:26.641597
+T0008,SUPERVISOR,Workflow,Supervisor profile setup,Profile configured,Profile configured,PASS,Dept: Engineering,2026-03-12T15:50:27.931024
+T0009,STUDENT,Workflow,Project creation,Project created,Project ID 28,PASS,,2026-03-12T15:50:27.933808
+T0010,SUPERVISOR,Workflow,Supervisor appointment,Supervisor assigned,Supervisor ID 95,PASS,,2026-03-12T15:50:27.933808
+T0011,STUDENT,Workflow,Form submission,Form submitted,Form submitted,PASS,Form ID: 6,2026-03-12T15:50:27.946836
+T0012,ADMIN,Workflow,Form approval,Form approved by admin,Form approved,PASS,,2026-03-12T15:50:27.949686
+T0013,HDC,Workflow,HDC verification,Form verified by HDC,Form verified,PASS,,2026-03-12T15:50:27.953501
+T0014,EXAMINER,Workflow,Examiner appointment,Examiner appointed,Examiner ID 24,PASS,,2026-03-12T15:50:29.649601
+T0015,EXAMINER,Workflow,Examiner approval,Examiner approved project,Status: approved,PASS,,2026-03-12T15:50:29.654727
+T0016,SYSTEM,Workflow,Complete workflow test,All workflow steps pass,All steps completed,PASS,Workflow executed successfully,2026-03-12T15:50:29.654727
+T0017,STUDENT,Auth,STUDENT login,User authenticates,Authenticated,PASS,,2026-03-12T15:50:31.996176
+T0018,STUDENT,Auth,STUDENT logout,User logouts,Logged out,PASS,,2026-03-12T15:50:32.053011
+T0019,SCHOLAR,Auth,SCHOLAR login,User authenticates,Authenticated,PASS,,2026-03-12T15:50:33.711898
+T0020,SCHOLAR,Auth,SCHOLAR logout,User logouts,Logged out,PASS,,2026-03-12T15:50:33.800327
+T0021,EXAMINER,Auth,EXAMINER login,User authenticates,Authenticated,PASS,,2026-03-12T15:50:35.546650
+T0022,EXAMINER,Auth,EXAMINER logout,User logouts,Logged out,PASS,,2026-03-12T15:50:35.553873
+T0023,ADMIN,Auth,ADMIN login,User authenticates,Authenticated,PASS,,2026-03-12T15:50:37.007213
+T0024,ADMIN,Auth,ADMIN logout,User logouts,Logged out,PASS,,2026-03-12T15:50:37.013694
+T0025,SYSTEM,HTTP,Login page (/signin),Status 200,Status 200,PASS,,2026-03-12T15:50:38.030700
+T0026,SYSTEM,HTTP,Signup page (/signup),Status 200,Status 200,PASS,,2026-03-12T15:50:38.036524
+T0027,SYSTEM,HTTP,Not found page (/404-notfound),Status 404,Status 404,PASS,,2026-03-12T15:50:38.065484
+T0028,STUDENT,PageLoad,STUDENT login,Login successful,Authenticated,PASS,,2026-03-12T15:51:00.587851
+T0029,STUDENT,PageLoad,Student Profile (/profile),Page loads with content,Page loaded,PASS,,2026-03-12T15:51:02.496358
+T0030,STUDENT,PageLoad,Student Projects (/projects),Page loads with content,Page loaded,PASS,,2026-03-12T15:51:04.106397
+T0031,SCHOLAR,PageLoad,SCHOLAR login,Login successful,Authenticated,PASS,,2026-03-12T15:51:22.498725
+T0032,SCHOLAR,PageLoad,Scholar Profile (/scholar/profile),Page loads with content,Page loaded,PASS,,2026-03-12T15:51:25.019550
+T0033,SCHOLAR,PageLoad,Scholar Invites (/invites),Page loads with content,Page loaded,PASS,,2026-03-12T15:51:27.160978
+T0034,EXAMINER,PageLoad,EXAMINER login,Login successful,Authenticated,PASS,,2026-03-12T15:51:43.678290
+T0035,EXAMINER,PageLoad,Examiner Profile (/examiner/profile),Page loads with content,Page loaded,PASS,,2026-03-12T15:51:44.959354
+T0036,EXAMINER,PageLoad,Examiner Invites (/invites/examiner),Page loads with content,Page loaded,PASS,,2026-03-12T15:51:47.197305
+T0037,STUDENT,Buttons,Student Profile - 19 elements,Buttons interactive,1/2 clickable,PASS,Total: 19 interactive elements,2026-03-12T15:51:50.192128
+T0038,STUDENT,Buttons,Student Projects - 19 elements,Buttons interactive,1/2 clickable,PASS,Total: 19 interactive elements,2026-03-12T15:51:53.039726
+T0039,SCHOLAR,Buttons,Scholar Profile - No clickables,Page interactive elements present,0 buttons/links found,PASS,Minimal UI (info page),2026-03-12T15:51:54.296510
+T0040,EXAMINER,Buttons,Examiner Profile - 19 elements,Buttons interactive,1/2 clickable,PASS,Total: 19 interactive elements,2026-03-12T15:51:56.950097
