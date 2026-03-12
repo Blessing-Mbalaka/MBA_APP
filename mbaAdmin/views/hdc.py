@@ -307,8 +307,10 @@ def decline_intent(request):
         else:
             project.comments = comment
     project.intent_form_submitted = False
-    t = threading.Thread(target=project_status_changed_email, args=(project.get_supervisor().email, "Your project intent form has been declined by HDC.",))
-    t.start()
+    supervisor = project.get_supervisor()
+    if supervisor:
+        t = threading.Thread(target=project_status_changed_email, args=(supervisor.email, "Your project intent form has been declined by HDC.",))
+        t.start()
     messages.success(request, "Project intent declined successfully")
     project.save()
     return redirect("mba_admin:hdc_intent_submission")
@@ -318,9 +320,11 @@ def approve_intent(request):
     project_id = request.POST.get("project_id")
     project = get_object_or_404(Project, pk=project_id)
     project.intent_form_approved = True
+    supervisor = project.get_supervisor()
+    if supervisor:
+        t = threading.Thread(target=project_status_changed_email, args=(supervisor.email, "Your project intent form has been approved by HDC.",))
+        t.start()
     messages.success(request, "Project intent approved successfully")
-    t = threading.Thread(target=project_status_changed_email, args=(project.get_supervisor().email, "Your project intent form has been approved by HDC.",))
-    t.start()
     project.save()
     return redirect("mba_admin:hdc_intent_submission")
 
@@ -445,9 +449,10 @@ def hdc_reject(request):
             project.comments = project_comments
         else:
             project.comments = comment
-    print(project.get_supervisor().email)
-    t = threading.Thread(target=send_reject_email, args=(project.get_supervisor().email,))
-    t.start()
+    supervisor = project.get_supervisor()
+    if supervisor:
+        t = threading.Thread(target=send_reject_email, args=(supervisor.email,))
+        t.start()
     project.project_status = project.ProjectStatus.HDC_DECLINED
     project.save()
     return redirect("mba_admin:hdc")
@@ -575,8 +580,10 @@ def approve_title(request):
     messages.success(request, "Project title approved successfully")
     t = threading.Thread(target=project_status_changed_email, args=(project.student.email, "Your project title has been approved by  HDC. "))
     t.start()
-    t = threading.Thread(target=project_status_changed_email, args=(project.get_supervisor().email, f"The project title for student {project.student.email} has been approved by HDC"))
-    t.start()
+    supervisor = project.get_supervisor()
+    if supervisor:
+        t = threading.Thread(target=project_status_changed_email, args=(supervisor.email, f"The project title for student {project.student.email} has been approved by HDC"))
+        t.start()
     project.save()
 
    
@@ -612,8 +619,10 @@ def decline_title(request):
         project.project_status = project.ProjectStatus.JBS5_HDC_declined
         t = threading.Thread(target=project_status_changed_email, args=(project.student.email, "Your project title has been declined by  HDC. "))
         t.start()
-        t = threading.Thread(target=project_status_changed_email, args=(project.get_supervisor().email, f"The project title for student {project.student.email} has been declined by HDC"))
-        t.start()
+        supervisor = project.get_supervisor()
+        if supervisor:
+            t = threading.Thread(target=project_status_changed_email, args=(supervisor.email, f"The project title for student {project.student.email} has been declined by HDC"))
+            t.start()
         project.save()
         messages.success(request, "Project title declined successfully")
     return redirect(url)
@@ -715,8 +724,10 @@ def send_project_to_supervisor(request):
         project.nomination_form_submitted = False
         project.reset_appointed_assessors()
         project.save()
-        t = threading.Thread(target=send_reject_email, args=(project.get_supervisor().email,))
-        t.start()
+        supervisor = project.get_supervisor()
+        if supervisor:
+            t = threading.Thread(target=send_reject_email, args=(supervisor.email,))
+            t.start()
         messages.success(request, "Project returned to supervisor successfully")
         return redirect(url)
     else:

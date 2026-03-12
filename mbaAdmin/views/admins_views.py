@@ -29,8 +29,10 @@ def approve_title(request):
      messages.success(request, "Project title approved successfully.")
      t = threading.Thread(target=project_status_changed_email, args=(project.student.email, "Your project title has been approved by  Admin. And is sent for HDC approval"))
      t.start()
-     t = threading.Thread(target=project_status_changed_email, args=(project.get_supervisor().email, f"The project title for student {project.student.email} has been approved by Admin. And is sent for HDC approval"))
-     t.start()
+     supervisor = project.get_supervisor()
+     if supervisor:
+         t = threading.Thread(target=project_status_changed_email, args=(supervisor.email, f"The project title for student {project.student.email} has been approved by Admin. And is sent for HDC approval"))
+         t.start()
      project.save()
      return redirect(url)
      
@@ -63,8 +65,10 @@ def decline_title(request):
       project.project_status = Project.ProjectStatus.JBS5_Admin_declined
       t = threading.Thread(target=project_status_changed_email, args=(project.student.email, "Your project title has been declined by  Admin. Please check the comments and resubmit."))
       t.start()
-      t = threading.Thread(target=project_status_changed_email, args=(project.get_supervisor().email, f"The project title for student {project.student.email} has been declined by Admin. Please check the comments and resubmit."))
-      t.start()
+      supervisor = project.get_supervisor()
+      if supervisor:
+          t = threading.Thread(target=project_status_changed_email, args=(supervisor.email, f"The project title for student {project.student.email} has been declined by Admin. Please check the comments and resubmit."))
+          t.start()
       project.save() 
       messages.success(request, "Project title declined successfully.")
       return redirect(url)   
@@ -98,8 +102,10 @@ def decline_intent(request):
       project.intent_form_submitted = False
       t = threading.Thread(target=project_status_changed_email, args=(project.student.email, "Your project intent form has been declined by  Admin. Please check the comments and resubmit."))
       t.start()
-      t = threading.Thread(target=project_status_changed_email, args=(project.get_supervisor().email, f"The project intent form for student {project.student.email} has been declined by Admin. Please check the comments and resubmit."))
-      t.start()
+      supervisor = project.get_supervisor()
+      if supervisor:
+          t = threading.Thread(target=project_status_changed_email, args=(supervisor.email, f"The project intent form for student {project.student.email} has been declined by Admin. Please check the comments and resubmit."))
+          t.start()
       project.save() 
       messages.success(request, "Project intent declined successfully.")
       return redirect(url)   
@@ -114,8 +120,10 @@ def approve_notice_form(request):
      messages.success(request, "Notice form approved successfully.")
      t = threading.Thread(target=project_status_changed_email, args=(project.student.email, "Your project notice form has been approved by  Admin."))
      t.start()
-     t = threading.Thread(target=project_status_changed_email, args=(project.get_supervisor().email, f"The project notice form for student {project.student.email} has been approved by Admin."))
-     t.start()
+     supervisor = project.get_supervisor()
+     if supervisor:
+         t = threading.Thread(target=project_status_changed_email, args=(supervisor.email, f"The project notice form for student {project.student.email} has been approved by Admin."))
+         t.start()
      project.save()
      return redirect('mba_admin:titles_submitted')
     return HttpResponseNotFound()
@@ -138,8 +146,10 @@ def decline_notice_form(request):
       project.save()
       t = threading.Thread(target=project_status_changed_email, args=(project.student.email, "Your project notice form has been declined by  Admin. Please check the comments and resubmit."))
       t.start()
-      t = threading.Thread(target=project_status_changed_email, args=(project.get_supervisor().email, f"The project notice form for student {project.student.email} has been declined by Admin. Please check the comments and resubmit."))
-      t.start() 
+      supervisor = project.get_supervisor()
+      if supervisor:
+          t = threading.Thread(target=project_status_changed_email, args=(supervisor.email, f"The project notice form for student {project.student.email} has been declined by Admin. Please check the comments and resubmit."))
+          t.start() 
       messages.success(request, "Notice form declined successfully.")
       return redirect('mba_admin:titles_submitted')   
    return HttpResponseNotFound()
