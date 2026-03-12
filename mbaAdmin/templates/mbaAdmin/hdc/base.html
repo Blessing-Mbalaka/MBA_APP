@@ -96,6 +96,15 @@
 </aside>
 
 <main class="p-4 sm:ml-64 pt-20">
+  <!-- Welcome Banner -->
+  <div class="mb-6 p-6 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg shadow-md text-black">
+    {% if user.first_name %}
+      <h1 class="text-2xl font-bold">Welcome, {{ user.first_name }} {{ user.last_name }}</h1>
+    {% else %}
+      <h1 class="text-2xl font-bold">Welcome, {{ user.email }}</h1>
+    {% endif %}
+    <p class="text-sm mt-2">You are logged in as <span class="font-semibold">{{ user.get_user_type_display }}</span></p>
+  </div>
   {% block content %}
   
   {% endblock content %}
