@@ -14,6 +14,18 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-temp-key')
 # DEBUG = config('DEBUG', default=False, cast=bool)
 DEBUG = True
 ALLOWED_HOSTS = ['*']
+
+# ========================
+# CSRF SETTINGS
+# ========================
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'https://127.0.0.1:8000',
+    'https://localhost:8000',
+]
+CSRF_COOKIE_SECURE = False  # Allow cookies over HTTP in development
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read CSRF token if needed
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -77,6 +89,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
+                'django.template.context_processors.csrf',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.media',

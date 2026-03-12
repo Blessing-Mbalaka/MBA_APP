@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.urls import path
-
 from .views import auth_views, profile_views, projects_views, supervisor_view, uploads_views, Invite, studentSupervisorForm, JBS5form, NominationForm, JBS10
 
 app_name = "mba_main"
@@ -49,11 +48,10 @@ urlpatterns = [
     path("signin", auth_views.signin, name="signin"),
     path("reset/password", auth_views.reset_password, name="reset_password"),
     path("get/reset/password/token", auth_views.get_reset_token, name="get_reset_token"),
-    path("appoint/assessor/<int:assessor_id>", 
-         supervisor_view.appoint_assessor, name="appoint_assessor"),
-    path("nomination/form/<int:project_id>", 
-         NominationForm.form, name="nominaton_form"),
-    path("nomination/form/sign/<int:project_id>", 
-         NominationForm.signform, name="sign_nominaton_form"),
-     path("submit/to/hdc", projects_views.submit_to_hdc, name="submit_to_hdc"),
+    path("appoint/assessor/<int:assessor_id>", supervisor_view.appoint_assessor, name="appoint_assessor"),
+    path("nomination/form/<int:project_id>", NominationForm.form, name="nominaton_form"),
+    path("nomination/form/sign/<int:project_id>", NominationForm.signform, name="sign_nominaton_form"),
+    path("submit/to/hdc", projects_views.submit_to_hdc, name="submit_to_hdc"),
 ]
+
+

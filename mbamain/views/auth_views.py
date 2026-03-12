@@ -26,7 +26,7 @@ def signin(request):
                 return redirect("mba_main:index")
             elif user.is_scholar():
                 return redirect("mba_main:index_scholar")
-            elif user.is_examiner():
+            elif user.user_type == AUser.UserType.EXAMINER:
                return redirect("mba_main:profile_examiner")
             elif user.is_hdc():
                 return redirect("mba_admin:hdc_titles_submission")
@@ -97,7 +97,7 @@ def reset_password(request):
          return redirect("mba_main:index")
       elif user.is_scholar():
          return redirect("mba_main:index_scholar")
-      elif user.is_examiner():
+      elif user.user_type == AUser.UserType.EXAMINER:
                return redirect("mba_main:profile_examiner")
       else:
            return redirect("mba_admin:index") # this is for admin users

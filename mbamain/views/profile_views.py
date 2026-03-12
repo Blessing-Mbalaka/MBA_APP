@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
 from mbamain.utils.shortcuts import require_auth,require_student, require_scholar, update_module, require_examiner
 from django.contrib import messages
-from mbamain.models import ResearchInterest, ExamminerProfile , StudentProfile, SupervisorProfile
+from mbamain.models import ResearchInterest, ExamminerProfile , StudentProfile, SuperVisorProfile, AUser
 from django.contrib.auth import authenticate, login
 
 
@@ -214,7 +214,7 @@ def add_interest(request):
          request.user.supervisor_profile.save()
          messages.success(request, "Skills updated successfully")
          return redirect("mba_main:profile_scholar")
-     elif request.user.is_examiner():
+     elif request.user.user_type == AUser.UserType.EXAMINER:
          userSkills = request.user.examiner_profile.skills.split(",") if request.user.examiner_profile.skills else []
          newSkills = [skill for skill in skills if skill not in userSkills]
          request.user.examiner_profile.skills = ",".join(userSkills + newSkills)
@@ -234,7 +234,7 @@ def remove_interest(request):
         request.user.supervisor_profile.save()
         messages.success(request, "Removed successfully")
         return redirect("mba_main:profile_shoclar")
-      elif request.user.is_examiner():
+      elif request.user.user_type == AUser.UserType.EXAMINER:
         request.user.examiner_profile.skills = ",".join(
             [s for s in request.user.examiner_profile.skills.split(",") if s != skill]
         )

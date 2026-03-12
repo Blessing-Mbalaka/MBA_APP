@@ -19,8 +19,18 @@ def is_admin(view_fuc):
         elif not request.user.is_authenticated:
             return redirect("mba_main:signin")
         else:
-            from django.http import HttpResponseForbidden
-            return HttpResponseForbidden("You are not allowed to access this page.")
+            # Redirect authenticated non-admin users to their appropriate dashboard
+            if request.user.user_type == AUser.UserType.EXAMINER:
+                return redirect("mba_main:profile_examiner")
+            elif request.user.is_scholar():
+                return redirect("mba_main:index_scholar")
+            elif request.user.is_student():
+                return redirect("mba_main:index")
+            elif request.user.is_hdc():
+                return redirect("mba_admin:hdc_titles_submission")
+            else:
+                from django.http import HttpResponseForbidden
+                return HttpResponseForbidden("You are not allowed to access this page.")
     return wrapper
 
 def is_admin_or_hdc(view_fuc):
@@ -35,8 +45,16 @@ def is_admin_or_hdc(view_fuc):
         elif not request.user.is_authenticated:
             return redirect("mba_main:signin")
         else:
-            from django.http import HttpResponseForbidden
-            return HttpResponseForbidden("You are not allowed to access this page.")
+            # Redirect authenticated non-admin/hdc users to their appropriate dashboard
+            if request.user.user_type == AUser.UserType.EXAMINER:
+                return redirect("mba_main:profile_examiner")
+            elif request.user.is_scholar():
+                return redirect("mba_main:index_scholar")
+            elif request.user.is_student():
+                return redirect("mba_main:index")
+            else:
+                from django.http import HttpResponseForbidden
+                return HttpResponseForbidden("You are not allowed to access this page.")
     return wrapper
 
 def is_hdc(view_fuc):
@@ -50,8 +68,18 @@ def is_hdc(view_fuc):
         elif not request.user.is_authenticated:
             return redirect("mba_main:signin")
         else:
-            from django.http import HttpResponseForbidden
-            return HttpResponseForbidden("You are not allowed to access this page.")
+            # Redirect authenticated non-HDC users to their appropriate dashboard
+            if request.user.is_admin():
+                return redirect("mba_admin:index")
+            elif request.user.user_type == AUser.UserType.EXAMINER:
+                return redirect("mba_main:profile_examiner")
+            elif request.user.is_scholar():
+                return redirect("mba_main:index_scholar")
+            elif request.user.is_student():
+                return redirect("mba_main:index")
+            else:
+                from django.http import HttpResponseForbidden
+                return HttpResponseForbidden("You are not allowed to access this page.")
     return wrapper
 
 
