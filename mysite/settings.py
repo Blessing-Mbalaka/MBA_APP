@@ -135,14 +135,21 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # ========================
 # EMAIL SETTINGS
 # ========================
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
-EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
+# Use console backend for testing (set EMAIL_USE_CONSOLE=True in .env), or SMTP for production
+USE_CONSOLE_EMAIL = config('EMAIL_USE_CONSOLE', default=False, cast=bool)
+
+if USE_CONSOLE_EMAIL:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    print("📧 EMAIL: Using Console Backend (emails printed to console)")
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+    EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+    DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
 
 # ========================
 # DEFAULT AUTO FIELD
