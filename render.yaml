@@ -1,0 +1,19 @@
+﻿services:
+  - type: web
+    name: mba-app
+    runtime: python312
+    buildCommand: >
+      pip install --upgrade pip &&
+      pip install -r requirements.txt &&
+      python manage.py collectstatic --noinput &&
+      python init_and_validate_db.py
+    startCommand: gunicorn mysite.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: mysite.settings
+      - key: PYTHON_VERSION
+        value: '3.12'
+      - key: PYTHONUNBUFFERED
+        value: 'true'
+      - key: PORT
+        value: '10000'
