@@ -1,4 +1,4 @@
-from mbaAdmin.utils.shortcuts import is_admin, is_hdc, send_reject_email, project_status_changed_email
+from mbaAdmin.utils.shortcuts import is_admin, is_hdc, is_admin_or_hdc, send_reject_email, project_status_changed_email
 from django.shortcuts import render, redirect, reverse, get_object_or_404, HttpResponse
 from django.http import HttpResponseNotFound
 from mbamain.models import Project, Cv
@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.contrib import messages
 import threading
 
-@is_admin
+@is_admin_or_hdc
 def hdc(request):
     per_page = 10
     page = request.GET.get("page", 0)
@@ -54,7 +54,7 @@ def hdc(request):
     })
 
 
-@is_admin
+@is_admin_or_hdc
 def titles_submissions(request):
     per_page = 10
     page = request.GET.get("page", 0)
@@ -102,7 +102,7 @@ def titles_submissions(request):
     })
 
 
-@is_admin
+@is_admin_or_hdc
 def intent_submissions(request):
     per_page = 10
     page = request.GET.get("page", 0)
@@ -198,7 +198,7 @@ def hdc_intent_submissions(request):
     })
 
 
-@is_admin
+@is_admin_or_hdc
 def approved_hdc(request):
     per_page = 10
     page = request.GET.get("page", 0)
@@ -245,7 +245,7 @@ def approved_hdc(request):
         "prev": prev_url,
     })
 
-@is_admin
+@is_admin_or_hdc
 def nominations_submitted(request):
     per_page = 10
     page = request.GET.get("page", 0)
@@ -424,7 +424,7 @@ def hdc_titles_submission(request):
 
 
 
-@is_admin
+@is_admin_or_hdc
 def hdc_approve(request):
     project_id = request.POST.get("project_id")
     project = get_object_or_404(Project, pk=project_id)
@@ -433,7 +433,7 @@ def hdc_approve(request):
     return redirect("mba_admin:hdc")
 
 
-@is_admin
+@is_admin_or_hdc
 def hdc_reject(request):
     project_id = request.POST.get("project_id")
     comment = request.POST.get("comment")
@@ -454,7 +454,7 @@ def hdc_reject(request):
    
 
 
-@is_admin
+@is_admin_or_hdc
 def download_cv(request):
     if request.method == "GET":
         try: 
@@ -687,7 +687,7 @@ def hdc_approve_title(request):
 
 
 
-@is_admin
+@is_admin_or_hdc
 def send_project_to_supervisor(request):
     page = request.GET.get("page", 0)
     try:

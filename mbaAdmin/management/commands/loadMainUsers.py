@@ -8,6 +8,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         try:
             user = AUser.objects.create_user(username="admin@uj.ac.za", email="admin@uj.ac.za", password="password")
+             
             user.user_type = AUser.UserType.MAIN_ADMIN
             user.save()
         except Exception as e:

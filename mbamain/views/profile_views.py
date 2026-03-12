@@ -144,6 +144,11 @@ def update_examiner_profile(request):
 
 def update_student_profile(request):
     user = request.user  # logged-in user
+    
+    # Check if user is authenticated
+    if not user.is_authenticated:
+        messages.error(request, "You must be logged in to update your profile.")
+        return redirect('/signin')
 
     try:
         profile = user.student_profile

@@ -5,7 +5,6 @@ from .views import scholars_views, students_views, profile_views, auth_views, ac
 app_name = "mba_admin"
 urlpatterns = [
     path("", activities_views.index, name="index"),
-    path("signin", auth_views.signin, name="signin"),
     path("signout", auth_views.signout, name="signout"),
     path("scholars", scholars_views.scholars, name="scholars"),
     path("supervisors", scholars_views.supervisors, name="supervisors"),

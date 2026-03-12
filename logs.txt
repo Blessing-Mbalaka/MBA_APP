@@ -1,0 +1,151 @@
+PAGE LOADING TEST REPORT
+Generated: 2026-03-08 23:57:10
+================================================================================
+
+SUMMARY
+================================================================================
+[PASS] Passed:  98
+[FAIL] Failed:  7
+[SKIP] Skipped: 0
+Total: 105
+
+FAILED PAGES
+================================================================================
+
+Path:    /invites
+Name:    index_scholar
+Status:  404
+Message: Page not found (404)
+
+Path:    /accept/invite/13
+Name:    accept_invite
+Status:  404
+Message: Page not found (404)
+
+Path:    /decline/invite/13
+Name:    decline_invite
+Status:  404
+Message: Page not found (404)
+
+Path:    /invites/examiner
+Name:    examiner_invites
+Status:  404
+Message: Page not found (404)
+
+Path:    /accept/invite/examiner/13
+Name:    examiner_accept_invite
+Status:  404
+Message: Page not found (404)
+
+Path:    /decline/invite/examiner/13
+Name:    examiner_decline_invite
+Status:  404
+Message: Page not found (404)
+
+Path:    /^media/(?P12.*)$
+Name:    unnamed
+Status:  404
+Message: Page not found (404)
+
+================================================================================
+
+PASSED PAGES (98)
+================================================================================
+/                                                  (index                         ) - 200
+/update/module                                     (update_module                 ) - 200
+/projects                                          (projects                      ) - 200
+/projects/create                                   (create_project                ) - 200
+/projects/update/12                                (update_project                ) - 200
+/projects/manage/12                                (student_manage_project        ) - 200
+/profile                                           (profile                       ) - 200
+/scholar/projects                                  (projects_scholar              ) - 200
+/scholar/profile                                   (profile_scholar               ) - 200
+/examiner/profile                                  (profile_examiner              ) - 200
+/examiner/profile/update                           (profile_update_examiner       ) - 200
+/student/profile/update                            (update_student_profile        ) - 200
+/scholar/manage/project/12                         (manage_project                ) - 200
+/scholar/signature                                 (upload_signature              ) - 200
+/scholar/remove/interest                           (remove_research_interest      ) - 200
+/get/interests/scholar                             (research_interest_search      ) - 200
+/add/interests/scholar                             (add_research_interest         ) - 200
+/update/profile                                    (update_supervisor_profile     ) - 200
+/download/signature                                (download_signature            ) - 200
+/upload/cv                                         (upload_cv                     ) - 200
+/download/cv                                       (download_cv                   ) - 200
+/notice/form/12                                    (notice_form                   ) - 200
+/submit/notice/form                                (submit_notice_form            ) - 200
+/sign/notice/form/12                               (sign-notice-form              ) - 200
+/sign/notice/signature/12                          (load_signature                ) - 200
+/studentsuperivor/form/12                          (student_supervisor_form       ) - 200
+/studentsuperivor/form/sign/12                     (sign_sp_form                  ) - 200
+/jbs5/form/12                                      (jbs5_form                     ) - 200
+/submit/jbs5/form                                  (submit_jbs5_form              ) - 200
+/submit/nomination/form                            (submit_nomination_form        ) - 200
+/jbs5/form/sign/12                                 (sign_jbs5                     ) - 200
+/jbs10/form/12                                     (jbs10_form                    ) - 200
+/jbs10/form/sign/12                                (sign_jbs10                    ) - 200
+/signout                                           (signout                       ) - 200
+/signup                                            (signup                        ) - 200
+/signin                                            (signin                        ) - 200
+/reset/password                                    (reset_password                ) - 200
+/get/reset/password/token                          (get_reset_token               ) - 200
+/appoint/assessor/9                                (appoint_assessor              ) - 200
+/nomination/form/12                                (nominaton_form                ) - 200
+/nomination/form/sign/12                           (sign_nominaton_form           ) - 200
+/submit/to/hdc                                     (submit_to_hdc                 ) - 200
+/admin/                                            (index                         ) - 403
+/admin/signin                                      (signin                        ) - 200
+/admin/signout                                     (signout                       ) - 200
+/admin/scholars                                    (scholars                      ) - 403
+/admin/supervisors                                 (supervisors                   ) - 403
+/admin/examiners                                   (examiners                     ) - 403
+/admin/manage/student/12                           (manage_student                ) - 403
+/admin/onboard/scholar                             (onboard_scholar               ) - 403
+/admin/onboard/scholars                            (onboard_scholars              ) - 403
+/admin/onboard/examiners                           (onboard_examiners             ) - 403
+/admin/onboard/students                            (onboard_students              ) - 403
+/admin/invite/superivosr                           (send_invite                   ) - 403
+/admin/appoint/supervisor                          (appoint_sup                   ) - 403
+/admin/researchInterest                            (research_interest             ) - 403
+/admin/researchInterest/add                        (add_research_interest         ) - 403
+/admin/researchInterest/update                     (update_research_interest      ) - 403
+/admin/students                                    (students                      ) - 403
+/admin/manage/admins                               (manage_admins                 ) - 403
+/admin/profile                                     (profile                       ) - 403
+/admin/hdc                                         (hdc                           ) - 403
+/admin/titles/submitted                            (titles_submitted              ) - 403
+/admin/intent/submitted                            (intent_submitted              ) - 403
+/admin/hdc/intent/submitted                        (hdc_intent_submission         ) - 403
+/admin/intent/decline                              (decline_intent                ) - 403
+/admin/hdc/download/cv                             (download_cv                   ) - 403
+/admin/hdc/decline/intent                          (hdc_decline_intent            ) - 403
+/admin/hdc/approve/intent                          (hdc_approve_intent            ) - 403
+/admin/hdc/approved                                (approved_hdc                  ) - 403
+/admin/nominations                                 (nomination_submitted          ) - 403
+/admin/approve/title                               (approve_title                 ) - 403
+/admin/decline/title                               (decline_title                 ) - 403
+/admin/hdc/approve/title                           (hdc_approve_title             ) - 403
+/admin/hdc/decline/title                           (hdc_decline_title             ) - 403
+/admin/approve/notice/form                         (approve_notice_form           ) - 403
+/admin/decline/notice/form                         (decline_notice_form           ) - 403
+/admin/hdc/accept_hdc                              (accept_hdc                    ) - 403
+/admin/hdc/reject                                  (reject_hdc                    ) - 403
+/admin/hdc/appoint/assessor                        (appoint_assessor              ) - 403
+/admin/hdc/update/assessor                         (update_assessor               ) - 403
+/admin/hdc/submission/nominations                  (hdc_nominations               ) - 403
+/admin/hdc/submissions/titles                      (hdc_titles_submission         ) - 403
+/admin/hdc/approve/assessor                        (approve_assessor              ) - 403
+/admin/hdc/decline/assessor                        (decline_assessor              ) - 403
+/admin/hdc/add/coment                              (hdc_add_comment               ) - 403
+/admin/hdc/return/project                          (send_project_to_admin         ) - 403
+/admin/return/project                              (send_project_to_supervisor    ) - 403
+/admin/send/assessor/invite                        (send_assessor_invite          ) - 403
+/admin/activate/student/9                          (activate_student              ) - 403
+/admin/deactivate/student/9                        (suspend_student               ) - 403
+/admin/activate/examiner/9                         (activate_examiner             ) - 403
+/admin/deactivate/examiner/9                       (suspend_examiner              ) - 403
+/admin/activate/supervisor/9                       (activate_supervisor           ) - 403
+/admin/deactivate/supervisor/9                     (suspend_supervisor            ) - 403
+/admin/reset/project/12                            (reset_project                 ) - 403
+/admin/upload/project12                            (upload_project                ) - 403
+/admin/create/user                                 (create_user                   ) - 200

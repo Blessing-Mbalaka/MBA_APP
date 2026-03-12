@@ -4,4 +4,4 @@ from mbaAdmin.utils import is_admin
 
 @is_admin
 def profile(request):
-    return render(request, "mbaAdmin/profile.html")
+    return render(request, "mbaAdmin/profile.html", {"user": request.user})

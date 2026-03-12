@@ -30,7 +30,12 @@
         </a>
       </div>
       <div class="flex items-center">
-          <div class="flex items-center ms-3">
+          <div class="flex items-center gap-4 ms-3">
+            <!-- User Info Display -->
+            <div class="hidden md:flex flex-col items-end text-sm">
+              <p class="font-semibold text-gray-900 dark:text-white">{{ user.first_name }} {{ user.last_name }}</p>
+              <p class="text-xs text-gray-600 dark:text-gray-400">{{ user.get_user_type_display }}</p>
+            </div>
             <div>
               <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
                 <span class="sr-only">Open user menu</span>
@@ -39,10 +44,14 @@
             </div>
             <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-sm shadow-sm dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
               <div class="px-4 py-3" role="none">
-                {%if user.user_type == 3 %} Student {%endif%}  
-                {%if user.user_type == 2 %} Scholar {%endif%}  
+                <p class="text-sm font-semibold text-gray-900 dark:text-white" role="none">
+                  {{ user.get_user_type_display }}
+                </p>
                 <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
-                  {{ user.username }}
+                  {{ user.first_name }} {{ user.last_name }}
+                </p>
+                <p class="text-xs text-gray-600 dark:text-gray-400 truncate" role="none">
+                  {{user.email}}
                 </p>
               </div>
               <ul class="py-1" role="none">

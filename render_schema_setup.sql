@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS public.mbamain_examminerprofile (
     id BIGSERIAL PRIMARY KEY,
     name TEXT,
     surname TEXT,
-    email VARCHAR(254),
+    email VARCHAR(255),
     created_at TIMESTAMPTZ NOT NULL,
     user_id BIGINT NOT NULL REFERENCES public.mbamain_auser(id) UNIQUE
 );

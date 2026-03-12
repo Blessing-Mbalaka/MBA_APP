@@ -46,8 +46,17 @@ def create_project(request):
     if request.method == "POST":
         project_title = request.POST.get("title")
         project_description = request.POST.get("description")
-        discipline = request.POST.get("discipline")
-        sdg = request.POST.get("sdg")
+        discipline = request.POST.get("discipline") or "General"
+        sdg = request.POST.get("sdg") or "No specific SDG"
+
+        # Validation
+        if not project_title or not project_title.strip():
+            messages.error(request, "Project title is required.")
+            return redirect("mba_main:projects")
+        
+        if not project_description or not project_description.strip():
+            messages.error(request, "Project description is required.")
+            return redirect("mba_main:projects")
 
         # Create a new project instance
         new_project = Project(
@@ -55,7 +64,7 @@ def create_project(request):
             project_title=project_title,
             project_description=project_description,
             discipline=discipline,
-            sdg_goal = sdg,
+            sdg_goal=sdg,
         )
         new_project.save()
         messages.success(request, "Project created successfully!")
@@ -143,7 +152,7 @@ def notice_to_submit(request,id):
     if request.method == "GET":
      project = get_object_or_404(Project,pk=id)
      student_id = project.student.id
-     if request.user.is_student() and not (student_id == request.user.id):
+     if request.user.is_authenticated and request.user.is_student() and not (student_id == request.user.id):
       return HttpResponseForbidden() 
      try:
          form = project.notice_form

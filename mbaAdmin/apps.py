@@ -6,3 +6,7 @@ from django.dispatch import receiver
 class MbaadminConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'mbaAdmin'
+
+    
+       
+

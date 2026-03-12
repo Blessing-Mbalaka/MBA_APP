@@ -16,6 +16,24 @@ def is_admin(view_fuc):
              t.start()  # Start the thread to send reminders
         if request.user.is_authenticated and request.user.is_admin():
             return view_fuc(request, *args, **kwargs)
+        elif not request.user.is_authenticated:
+            return redirect("mba_main:signin")
+        else:
+            from django.http import HttpResponseForbidden
+            return HttpResponseForbidden("You are not allowed to access this page.")
+    return wrapper
+
+def is_admin_or_hdc(view_fuc):
+    """Allow both ADMIN and HDC users"""
+    def wrapper(request, *args, **kwargs):
+        schedule, created = InviteScheduler.objects.get_or_create(created=True)
+        if  schedule.should_send():
+             t = threading.Thread(target=send_reminders)
+             t.start()  # Start the thread to send reminders
+        if request.user.is_authenticated and (request.user.is_admin() or request.user.is_hdc()):
+            return view_fuc(request, *args, **kwargs)
+        elif not request.user.is_authenticated:
+            return redirect("mba_main:signin")
         else:
             from django.http import HttpResponseForbidden
             return HttpResponseForbidden("You are not allowed to access this page.")
@@ -29,6 +47,8 @@ def is_hdc(view_fuc):
              t.start()  # Start the thread to send reminders
         if request.user.is_authenticated and request.user.is_hdc():
             return view_fuc(request, *args, **kwargs)
+        elif not request.user.is_authenticated:
+            return redirect("mba_main:signin")
         else:
             from django.http import HttpResponseForbidden
             return HttpResponseForbidden("You are not allowed to access this page.")
