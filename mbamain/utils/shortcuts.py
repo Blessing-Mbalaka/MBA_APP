@@ -1,8 +1,11 @@
+import logging
 from django.shortcuts import redirect, get_object_or_404
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from mbamain.models import AUser, Invite
 from django.http import HttpResponseForbidden, Http404
+
+logger = logging.getLogger(__name__)
 
 def require_auth(view_func):
     def _wraped_view(request, *args, **kwargs):
@@ -80,7 +83,10 @@ def send_reset_token(email, token):
 
     # Lastly, attach the HTML content to the email instance and send.
     msg.attach_alternative(html_content, "text/html")
+    logger.info(f"🔐 RESET TOKEN: {token}")
+    logger.info(f"📧 Sending password reset email to: {email}")
     msg.send()
+    logger.info(f"✅ Email sent to {email}")
 
 
 
