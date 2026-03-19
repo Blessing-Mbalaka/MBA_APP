@@ -43,6 +43,119 @@ Access the app at: `http://127.0.0.1:8000`
 
 ---
 
+## Easy to Run Settings
+
+### One-Command Setup (Development)
+```bash
+# Windows PowerShell
+& ".\venv\Scripts\Activate.ps1"; pip install -r requirements.txt; python manage.py migrate; python manage.py inject_test_data_comprehensive --clean; python manage.py runserver
+
+# Linux/Mac
+source venv/bin/activate && pip install -r requirements.txt && python manage.py migrate && python manage.py inject_test_data_comprehensive --clean && python manage.py runserver
+```
+
+### Quick Setup Scripts
+
+**Windows (PowerShell):**
+```powershell
+# Run once to setup everything
+.\setup_and_run.ps1
+```
+
+**Linux/Mac (Bash):**
+```bash
+# Run once to setup everything
+bash setup_and_run.sh
+```
+
+### Pre-Configured .env Template
+
+Copy and save as `.env` in the project root:
+```
+# Django
+DEBUG=True
+DJANGO_SETTINGS_MODULE=mysite.settings
+PYTHONUNBUFFERED=true
+SECRET_KEY=your-secret-key-here
+
+# Local Development Database (SQLite - default)
+DB_ENGINE=django.db.backends.sqlite3
+DB_NAME=db.sqlite3
+
+# Production Database (PostgreSQL on Render)
+# Uncomment to use Render PostgreSQL
+# DB_ENGINE=django.db.backends.postgresql
+# DB_NAME=mba_ieux
+# DB_USER_NAME=mba_ieux_user
+# DB_PASSWORD=your_password
+# DB_HOST=dpg-d6phcdngi27c738f02sg-a.oregon-postgres.render.com
+# DB_PORT=5432
+
+# Email Configuration
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=your_email@gmail.com
+EMAIL_HOST_PASSWORD=your_app_password
+EMAIL_USE_TLS=True
+EMAIL_USE_SSL=False
+
+# Application Settings
+ALLOWED_HOSTS=localhost,127.0.0.1
+CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000
+```
+
+### Useful Quick Commands
+
+```bash
+# Activate virtual environment
+source venv/bin/activate              # Linux/Mac
+venv\Scripts\activate                 # Windows CMD
+& ".\venv\Scripts\Activate.ps1"       # Windows PowerShell
+
+# Database setup
+python manage.py migrate
+
+# Create comprehensive test data
+python manage.py inject_test_data_comprehensive --clean
+
+# Create specific test data
+python manage.py inject_test_data_intent --clean      # Intent test data
+python manage.py inject_test_data_nomination --clean  # Nomination test data
+
+# Run development server
+python manage.py runserver
+
+# Run tests
+python systemtest.py
+
+# Reset and restart (clean slate)
+rm db.sqlite3 && python manage.py migrate && python manage.py inject_test_data_comprehensive --clean
+```
+
+### Development Setup Presets
+
+**For Local Testing:**
+```bash
+python manage.py migrate
+python manage.py inject_test_data_comprehensive --clean
+python manage.py runserver
+```
+
+**For Feature Development:**
+```bash
+python manage.py migrate
+python manage.py runserver --nothreading  # Useful for debugging
+```
+
+**For Database-Only Testing:**
+```bash
+python manage.py migrate
+# Use shell for manual testing
+python manage.py shell
+```
+
+---
+
 ## Test User Credentials
 
 ### Login URL

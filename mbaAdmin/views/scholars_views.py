@@ -173,20 +173,40 @@ def onboard_examiners_bulk(request):
             existence_count = 0
             failed = ""
 
-            for row in ws.iter_rows(min_row=2, values_only=True):
-                (
-                    name, surname, title, qualification, affiliation,
-                    street_address, cell_phone, email, number_of_students_supervised,
-                    current_affiliation, number_publications, international_assessor,
-                    academic_experience
-                ) = row
+            for row_num, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
+                # Validate row has enough columns (13 required)
+                if not row or len(row) < 13:
+                    failed += f" [Row {row_num}: Missing columns - need 13]"
+                    continue
 
                 try:
-                    if not is_valid_email(email.strip()):
-                        failed += " " + email
+                    # Unpack columns: Name, Surname, Title, Qualification, Affiliation, Street_address,
+                    # Cell_phone, Email, Number_of_students_supervised, Current_affiliation,
+                    # Number_publications, International_assessor, Academic_experience
+                    name = row[0]
+                    surname = row[1]
+                    title = row[2]
+                    qualification = row[3]
+                    affiliation = row[4]
+                    street_address = row[5]
+                    cell_phone = row[6]
+                    email = row[7]
+                    number_of_students_supervised = row[8] if row[8] is not None else 0
+                    current_affiliation = row[9]
+                    number_publications = row[10] if row[10] is not None else 0
+                    international_assessor = row[11] if row[11] is not None else False
+                    academic_experience = row[12] if row[12] is not None else 0
+
+                    # Validate required fields
+                    if not email or not name or not surname:
+                        failed += f" [Row {row_num}: Missing Name, Surname, or Email]"
                         continue
 
-                    if ExamminerProfile.objects.filter(email=email.strip()).exists():
+                    if not is_valid_email(str(email).strip()):
+                        failed += " " + str(email)
+                        continue
+
+                    if ExamminerProfile.objects.filter(email=str(email).strip()).exists():
                         existence_count += 1
                         continue
 
@@ -195,8 +215,8 @@ def onboard_examiners_bulk(request):
                     with transaction.atomic():
                         # Create user
                         user = AUser.objects.create_user(
-                            username=email.strip(),
-                            email=email.strip(),
+                            username=str(email).strip(),
+                            email=str(email).strip(),
                             password=temp_password,
                         )
                         user.set_role_type(AUser.RoleType.EXAMINER)
@@ -212,12 +232,12 @@ def onboard_examiners_bulk(request):
                             affiliation=affiliation,
                             street_address=street_address,
                             cell_phone=cell_phone,
-                            email=email.strip(),
-                            number_of_students_supervised=number_of_students_supervised,
+                            email=str(email).strip(),
+                            number_of_students_supervised=int(number_of_students_supervised) if number_of_students_supervised else 0,
                             current_affiliation=current_affiliation,
-                            number_publications=number_publications,
-                            international_assessor=international_assessor,
-                            academic_experience=academic_experience
+                            number_publications=int(number_publications) if number_publications else 0,
+                            international_assessor=bool(international_assessor),
+                            academic_experience=int(academic_experience) if academic_experience else 0
                         )
 
                         # Mark user as having profile
@@ -232,15 +252,14 @@ def onboard_examiners_bulk(request):
                         )
 
                 except Exception as e:
-                    failed += " " + str(email) + " "  + str(name)
-                    #print the exception
-                    print(f'an error {str(e)}')
-                    print(f"Failed to onboard examiner: {email}, {name}")
+                    failed += f" [Row {row_num}: {str(e)}]"
+                    print(f'Error at row {row_num}: {str(e)}')
+                    print(f"Failed to onboard examiner: {email if 'email' in locals() else 'unknown'}, {name if 'name' in locals() else 'unknown'}")
                     continue
 
             messages.success(
                 request,
-                f"The following were not added: {failed}"
+                f"Examiners uploaded successfully. Failed/skipped: {failed if failed else 'None'}"
             )
 
         except Exception as e:
@@ -283,17 +302,34 @@ def onboard_supervisor_bulk(request):
             existence_count = 0
             failed = ''
 
-            for row in ws.iter_rows(min_row=2, values_only=True):
-                title, names,surname, contact, email = row
+            for row_num, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
+                # Validate row has enough columns (5 required)
+                # Template3: Title, Names, Surname, Contact Details, email
+                if not row or len(row) < 5:
+                    failed += f" [Row {row_num}: Missing columns - need 5]"
+                    continue
+
                 try:
-                    if not is_valid_email(email.strip()):
-                        failed += " " + email
+                    # Unpack columns: Title, Names, Surname, Contact Details, email
+                    title = row[0]
+                    names = row[1]  # "Names"
+                    surname = row[2]
+                    contact = row[3]  # "Contact Details"
+                    email = row[4]
+
+                    # Validate required fields
+                    if not email or not names or not surname:
+                        failed += f" [Row {row_num}: Missing required fields]"
+                        continue
+
+                    if not is_valid_email(str(email).strip()):
+                        failed += " " + str(email)
                         print('invalid email')
                         continue
 
-                    if AUser.objects.filter(Q(email=email.strip()) | Q(username=email.strip())).exists():
+                    if AUser.objects.filter(Q(email=str(email).strip()) | Q(username=str(email).strip())).exists():
                         existence_count += 1
-                        user = AUser.objects.get(email=email.strip())
+                        user = AUser.objects.get(email=str(email).strip())
                         print(user.supervisor_profile)
                         continue
 
@@ -302,8 +338,8 @@ def onboard_supervisor_bulk(request):
                     with transaction.atomic():
                         # Create user
                         user = AUser.objects.create_user(
-                            username=email.strip(),
-                            email=email.strip(),
+                            username=str(email).strip(),
+                            email=str(email).strip(),
                             password=temp_password,
                         )
                         user.set_role_type(AUser.RoleType.SUPERVISOR)
@@ -330,14 +366,14 @@ def onboard_supervisor_bulk(request):
                         )
 
                 except Exception as e:
-                    failed += " " + str(email) + " "  + str(names)
-                    print(e)
-                    print(f"Failed to onboard supervisor: {email}, {names}")
+                    failed += f" [Row {row_num}: {str(e)}]"
+                    print(f"Error at row {row_num}: {str(e)}")
+                    print(f"Failed to onboard supervisor: {email if 'email' in locals() else 'unknown'}, {names if 'names' in locals() else 'unknown'}")
                     continue
 
             messages.success(
                 request,
-                f"Supervisor onboarding complete. The following emails failed: {failed}"
+                f"Supervisors uploaded successfully. Failed/skipped: {failed if failed else 'None'}"
             )
 
         except Exception as e:

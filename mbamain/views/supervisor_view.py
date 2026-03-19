@@ -1,6 +1,7 @@
 
 from django.shortcuts import render, redirect, get_object_or_404
 from mbamain.utils.shortcuts import require_auth, require_student, require_scholar
+from mbaAdmin.utils.shortcuts import supervisor_matches_discipline
 from mbamain.models import AUser, Project, ExamminerProfile
 from django.urls import reverse
 from django.contrib import messages
@@ -97,14 +98,27 @@ def appoint_assessor(request, assessor_id):
     except ValueError:
         page = 0
 
+    # Get all examiners and apply smart discipline matching
+    all_examiners = ExamminerProfile.objects.all().order_by('-created_at')
+
     if search:
-        assessors = ExamminerProfile.objects.filter(
-            (Q(name__icontains=search) |
-            Q(surname__icontains=search) |
-            Q(email__icontains=search) ) & Q(skills__icontains=project.discipline)
-        ).order_by('-created_at')[page*per_page:(page+1)*per_page]
+        # Filter by search AND smart discipline match
+        matching_examiners = [
+            exam for exam in all_examiners
+            if supervisor_matches_discipline(exam.skills or '', project.discipline) and
+               (search.lower() in (exam.name or '').lower() or
+                search.lower() in (exam.surname or '').lower() or
+                search.lower() in (exam.email or '').lower())
+        ]
     else:
-        assessors = ExamminerProfile.objects.filter(skills__icontains=project.discipline).order_by('-created_at')[page*per_page:(page+1)*per_page]
+        # Filter by smart discipline match only
+        matching_examiners = [
+            exam for exam in all_examiners
+            if supervisor_matches_discipline(exam.skills or '', project.discipline)
+        ]
+
+    # Apply pagination
+    assessors = matching_examiners[page*per_page:(page+1)*per_page]
     
     next_page = page + 1
     prev_page = page - 1 if page > 0 else 0

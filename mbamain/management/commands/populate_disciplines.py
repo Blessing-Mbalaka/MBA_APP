@@ -4,7 +4,7 @@ from mbamain.models import ResearchInterest
 
 class Command(BaseCommand):
     help = 'Populate ResearchInterest table with default discipline categories'
-
+    
     DISCIPLINES = {
         'Computer Science': 'Core IT and computer science disciplines',
         'Business Management': 'General business and management studies',

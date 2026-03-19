@@ -5,7 +5,7 @@ from mbamain.models import AUser, ExamminerProfile
 class Project(models.Model):
     class ProjectStatus(models.IntegerChoices):
         CREATED = 0, 'Created'
-        HDC_SUBMITTED = 1, 'Subtmited to ADMIN'
+        HDC_SUBMITTED = 1, "Subtmited to ADMIN"
         HDC_APPROVED =2, "Approved for HDC by ADMIN"
         HDC_DECLINED =3, "Rejected by  ADMIN"
         ADMIN_APPROVED =4, "Approved by ADMIN"

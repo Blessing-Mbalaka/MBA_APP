@@ -47,7 +47,6 @@ class JBS10(models.Model):
     external_assessor1_affiliation = models.TextField(null=True, max_length=200, blank=True, default='')
     external_assessor1_qualification = models.TextField(null=True, max_length=200, blank=True, default='')
     external_assessor1_email = models.EmailField(null=True,blank=True, default='')
-    
     external_assessor2_name = models.TextField(null=True, max_length=200, blank=True, default='')
     external_assessor2_staff_number = models.TextField(null=True, max_length=200, blank=True, default='')
     external_assessor2_affiliation = models.TextField(null=True, max_length=200, blank=True, default='')
@@ -85,10 +84,6 @@ class JBS10(models.Model):
     previous_external_assessor3_qualification = models.TextField(null=True, max_length=200, blank=True, default='')
     previous_external_assessor3_email = models.EmailField(null=True,blank=True, default='')
 
-
-
- 
-    
 
     # Signatures
     supervisor_signed = models.TextField(null=True, max_length=100, blank=True)

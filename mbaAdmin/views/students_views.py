@@ -2,7 +2,7 @@ from django.http import HttpResponseNotFound
 from django.shortcuts import redirect, render,get_object_or_404
 from django.urls import reverse
 from mbamain.models import AUser, Invite, StudentProfile, Project
-from mbaAdmin.utils import is_admin, send_invite,valid_role_type,generate_temp_password, send_invite_email, is_valid_email
+from mbaAdmin.utils import is_admin, send_invite,valid_role_type,generate_temp_password, send_invite_email, is_valid_email, supervisor_matches_discipline
 from django.contrib import messages
 from django.db.models import Q
 from openpyxl import load_workbook
@@ -84,48 +84,71 @@ def student_bulk_onboard(request):
             ws = workbook.active
             failed_count = 0
             failed_emails = ''
-            for row in ws.iter_rows(min_row=2, values_only=True):
-                title,surname, name, contact, student_no, student_email, secondary_email = row
+            for row_num, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
+                # Validate row has enough columns (7 required)
+                # Template2: Title, Last name, First name, Contact, Student Number, Email address, Secondary
+                if not row or len(row) < 7:
+                    failed_emails += f" [Row {row_num}: Missing columns - need 7]"
+                    failed_count += 1
+                    continue
+                    
                 try:
-                    # Skip invalid/duplicate rows
-                    if (
-                         AUser.objects.filter(email=student_email.strip()).exists()
-                        or StudentProfile.objects.filter(
-                            Q(student_no=student_no)
-                        ).exists()
-                    ):
-                        
+                    # Unpack columns: Title, Last name, First name, Contact, Student Number, Email address, Secondary
+                    title = row[0]
+                    surname = row[1]  # "Last name"
+                    name = row[2]     # "First name"
+                    contact = row[3]
+                    student_no = row[4]
+                    student_email = row[5]
+                    secondary_email = row[6]
+
+                    # Validate required fields
+                    if not student_email or not name or not surname or not student_no:
+                        failed_emails += f" [Row {row_num}: Missing required fields]"
+                        failed_count += 1
+                        continue
+                    
+                    # Normalize email and student_no for comparison
+                    student_email_clean = str(student_email).strip()
+                    student_no_clean = str(student_no).strip()
+                    
+                    # Better duplicate checking - check both user AND profile (case-insensitive)
+                    user_exists = AUser.objects.filter(email__iexact=student_email_clean).exists()
+                    profile_exists = StudentProfile.objects.filter(
+                        Q(student_no__iexact=student_no_clean) | Q(user__email__iexact=student_email_clean)
+                    ).exists()
+                    
+                    if user_exists or profile_exists:
                         failed_count += 1
                         continue
 
-                    if not is_valid_email(student_email.strip()):
+                    if not is_valid_email(student_email_clean):
                         
-                        failed_emails += " " + student_email
+                        failed_emails += " " + student_email_clean
                         continue
 
                     temp_pass = generate_temp_password()
 
                     with transaction.atomic():
-                        # Create user
+                        # Create user (signal will auto-create StudentProfile)
                         user = AUser.objects.create_user(
-                            username=student_email.strip(),
-                            email=student_email.strip(),
+                            username=student_email_clean,
+                            email=student_email_clean,
                             password=temp_pass,
                             user_type=AUser.UserType.STUDENT
                         )
 
-                        # Create profile
-                        student_profile = StudentProfile.objects.create(
-                            user=user,
-                            name=name,
-                            surname=surname,
-                            title=title,
-                            contact=contact,
-                            student_no=student_no,
-                            secondary_email=secondary_email,
-                            module="NA",
-                            block_id=block_id
-                        )
+                        # Get the auto-created profile from signal and update it with data
+                        student_profile, _ = StudentProfile.objects.get_or_create(user=user)
+                        student_profile.name = name
+                        student_profile.surname = surname
+                        student_profile.title = title
+                        student_profile.contact = contact
+                        student_profile.student_no = student_no_clean
+                        student_profile.secondary_email = secondary_email
+                        student_profile.module = "NA"
+                        student_profile.block_id = block_id
+                        student_profile.save()
 
                         # Mark user as having profile
                         user.has_profile = True
@@ -139,13 +162,14 @@ def student_bulk_onboard(request):
                         )
 
                 except Exception as e:
-                    failed_emails += " " + str(student_email)
-                    print(str(e))
+                    failed_emails += f" [Row {row_num}: {str(e)}]"
+                    print(f"Error at row {row_num}: {str(e)}")
+                    failed_count += 1
                     continue
 
             messages.success(
                 request,
-                f"The following emails failed: {failed_emails}"
+                f"Students uploaded successfully. Failed/skipped: {failed_emails if failed_emails else 'None'}"
             )
             # if failed_count > 0:
             #     messages.warning(request, f"{failed_count} students already existed or had invalid data.")
@@ -172,7 +196,12 @@ def manage_student(request, id):
         invites = None
   
     if project :
-        supervisors = AUser.objects.filter(user_type=AUser.UserType.SCHOLAR, supervisor_profile__skills__icontains=project.discipline).order_by('supervisor_profile__students')[0:10]
+        # Get all scholars and apply smart discipline matching
+        all_supervisors = AUser.objects.filter(user_type=AUser.UserType.SCHOLAR).order_by('supervisor_profile__students')
+        supervisors = [
+            sup for sup in all_supervisors 
+            if supervisor_matches_discipline(sup.supervisor_profile.skills or '', project.discipline)
+        ][0:10]
         responses_invites = Invite.objects.filter(response=1, project=project, invite_type=False)
         sup = [supervisor for supervisor in supervisors if not Invite.objects.filter(project=project, user=supervisor)]
     else:

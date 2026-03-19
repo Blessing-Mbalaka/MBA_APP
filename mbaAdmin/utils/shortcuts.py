@@ -99,6 +99,75 @@ def generate_temp_password():
     temp_password = ''.join(random.choice(characters) for i in range(length))
     return temp_password
 
+
+# Discipline-to-Skills Alias Mapping for Smart Supervisor Matching
+DISCIPLINE_ALIASES = {
+    'Cybersecurity': ['cybersecurity', 'network security', 'information security', 'infosec', 'network architecture', 'security'],
+    'Machine Learning': ['machine learning', 'ai', 'artificial intelligence', 'deep learning', 'data science', 'ml'],
+    'Cloud Computing': ['cloud computing', 'cloud', 'devops', 'aws', 'azure', 'gcp', 'infrastructure'],
+    'Data Science': ['data science', 'data analysis', 'analytics', 'big data', 'data mining', 'statistics'],
+    'Business Analytics': ['business analytics', 'analytics', 'business intelligence', 'bi', 'data analytics'],
+    'Digital Marketing': ['digital marketing', 'marketing', 'seo', 'smo', 'brand strategy', 'content marketing'],
+    'Finance & Banking': ['finance', 'banking', 'financial analysis', 'investment', 'fintech'],
+    'Computer Science': ['computer science', 'software development', 'software engineering', 'programming', 'algorithms'],
+    'Network Architecture': ['network architecture', 'networking', 'network security', 'cybersecurity', 'infrastructure'],
+}
+
+
+def get_discipline_keywords(discipline):
+    """
+    Get all alias keywords for a given discipline.
+    
+    Args:
+        discipline (str): The formal discipline name
+        
+    Returns:
+        list: All keyword variants for this discipline (lowercase)
+    """
+    if not discipline:
+        return []
+    
+    normalized_discipline = discipline.strip()
+    
+    # Check if exact match exists in aliases
+    for key, aliases in DISCIPLINE_ALIASES.items():
+        if key.lower() == normalized_discipline.lower():
+            return aliases
+    
+    # If no exact match, try the discipline itself as a keyword
+    return [normalized_discipline.lower()]
+
+
+def supervisor_matches_discipline(supervisor_skills, project_discipline):
+    """
+    Intelligently check if supervisor skills match the project discipline.
+    Uses flexible keyword matching to handle naming variations between
+    test data and real discipline names.
+    
+    Args:
+        supervisor_skills (str): Comma-separated skills string from supervisor profile
+        project_discipline (str): The project's discipline name
+        
+    Returns:
+        bool: True if supervisor skills match the project discipline
+    """
+    if not supervisor_skills or not project_discipline:
+        return False
+    
+    # Get all keywords for this discipline
+    keywords = get_discipline_keywords(project_discipline)
+    
+    # Convert supervisor skills to lowercase for case-insensitive matching
+    supervisor_skills_lower = supervisor_skills.lower()
+    
+    # Check if any keyword appears in supervisor skills
+    for keyword in keywords:
+        if keyword.lower() in supervisor_skills_lower:
+            return True
+    
+    return False
+
+
 def send_invite(user,temp_password):
     # First, render the plain text content.
     text_content = render_to_string(

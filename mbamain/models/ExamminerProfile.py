@@ -1,6 +1,8 @@
 from django.db import models
 
 class ExamminerProfile(models.Model):
+    #Make this a foreignkey reference, and create a profile ID as PK so we don't repeat logic, this makes no sense!!!!
+    #We can't be storing 
     user = models.OneToOneField('mbamain.AUser', related_name='examiner_profile', on_delete=models.CASCADE, null=False, blank=False)
     name = models.TextField(null=True, blank=True)
     surname = models.TextField(null=True, blank=True)  
